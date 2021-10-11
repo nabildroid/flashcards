@@ -1,6 +1,6 @@
-import 'package:flashcards/cubits/statistics_cubit.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/score.dart';
+import 'package:flashcards/models/stats.dart';
 
 import 'provider.dart';
 
