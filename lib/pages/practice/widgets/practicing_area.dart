@@ -18,7 +18,8 @@ class PracticingArea extends StatelessWidget {
     return BlocConsumer<PracticeCubit, PracticeState>(
         listener: (_, state) {
           if (state.status == PracticeStatus.finished) {
-            return Navigator.of(context).pop();
+            final score = context.read<PracticeCubit>().getScore();
+            return Navigator.of(context).pop(score);
           }
 
           _pageController.nextPage(

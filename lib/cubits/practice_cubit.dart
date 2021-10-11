@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/scheduler.dart';
-import 'package:flashcards/models/general.dart';
+import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/memorization.dart';
+import 'package:flashcards/models/score.dart';
 import 'package:flashcards/repositories/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -86,12 +88,17 @@ class PracticeCubit extends Cubit<PracticeState> {
   }
 
   Future<void> _submit() async {
-    await _repository.submitScore(Score(
+    final score = getScore();
+    await _repository.submitScore(score);
+    emit(state.copyWith(status: PracticeStatus.finished));
+  }
+
+  Score getScore() {
+    return Score(
       cards: state.learned,
       startTime: state.startTime,
       endTime: DateTime.now(),
-    ));
-    emit(state.copyWith(status: PracticeStatus.finished));
+    );
   }
 
   @override

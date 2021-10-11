@@ -1,4 +1,6 @@
-import 'package:flashcards/models/general.dart';
+import 'package:flashcards/cubits/statistics_cubit.dart';
+import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/score.dart';
 
 import 'provider.dart';
 
@@ -27,17 +29,6 @@ class RemoteRepository extends Provider {
         definition: "efesfeffzefze",
         tags: [],
         history: [],
-      ),
-    ]);
-  }
-
-  @override
-  Future<List<Set>> getSets() {
-    return Future.value([
-      Set(
-        id: "sdfsefse",
-        title: "sfsdfsdf",
-        description: "dffsdfsd",
       ),
     ]);
   }

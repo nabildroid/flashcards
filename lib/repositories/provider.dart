@@ -1,8 +1,9 @@
-import '../models/general.dart';
+import 'package:flashcards/cubits/statistics_cubit.dart';
+import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/score.dart';
 
 abstract class Provider {
   Future<List<Cart>> getCards(String setId);
-  Future<List<Set>> getSets();
 
   Future<Stats> getStats();
 

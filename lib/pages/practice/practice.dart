@@ -1,6 +1,7 @@
 import 'package:flashcards/core/scheduler.dart';
 import 'package:flashcards/cubits/practice_cubit.dart';
-import 'package:flashcards/models/general.dart';
+import 'package:flashcards/models/memorization.dart';
+import 'package:flashcards/models/score.dart';
 import 'package:flashcards/pages/practice/widgets/status_bar.dart';
 import 'package:flashcards/repositories/provider.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
@@ -15,7 +16,7 @@ class Practice extends StatefulWidget {
   const Practice._({Key? key}) : super(key: key);
 
   static route(PracticeCubit practiceCubit) {
-    return MaterialPageRoute(
+    return MaterialPageRoute<Score>(
       builder: (_) => BlocProvider.value(
         value: practiceCubit,
         child: const Practice._(),

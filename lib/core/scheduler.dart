@@ -1,4 +1,4 @@
-import 'package:flashcards/models/general.dart';
+import 'package:flashcards/models/cart.dart';
 
 class Scheduler {
   List<Cart> cards = [];

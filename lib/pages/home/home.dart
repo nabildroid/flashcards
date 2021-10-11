@@ -1,4 +1,5 @@
 import 'package:flashcards/cubits/practice_cubit.dart';
+import 'package:flashcards/models/score.dart';
 import 'package:flashcards/pages/practice/practice.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
 import 'package:flutter/material.dart';
@@ -59,15 +60,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text("Practsice"),
+        label: Text("Practice"),
         heroTag: "practice",
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final score = await Navigator.push<Score>(
             context,
             Practice.route(
               PracticeCubit(RepositoryProvider.of<RemoteRepository>(context)),
             ),
           );
+
+          if (score != null) {}
         },
       ),
     );
