@@ -1,10 +1,12 @@
 import 'package:flashcards/cubits/practice_cubit.dart';
+import 'package:flashcards/cubits/statistics_cubit.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/pages/practice/practice.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'widgets/chain.dart';
 import 'widgets/statstic_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +17,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    context.read<StatisticsCubit>().fetch();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,27 +36,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     StatisticCard(
+                      title: "Days in a Row",
                       children: [
-                        Text(
-                          "Days in a Row",
-                          style:
-                              Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                        ),
-                        const SizedBox(height: 90),
+                        BlocBuilder<StatisticsCubit, StatisticsState>(
+                            builder: (context, state) {
+                          return Chain(
+                            currentChain: state.currentChain,
+                            longestChain: state.longestChain,
+                            last5Days: state.last5Days,
+                          );
+                        }),
                       ],
                     ),
                     SizedBox(height: 10),
                     StatisticCard(
+                      title: "Learning Curve",
                       children: [
-                        Text(
-                          "Learning Curve",
-                          style:
-                              Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                        ),
                         const SizedBox(height: 90),
                       ],
                     ),
@@ -70,7 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
 
-          if (score != null) {}
+          if (score != null) {
+            context.read<StatisticsCubit>().addScore(score);
+          }
         },
       ),
     );

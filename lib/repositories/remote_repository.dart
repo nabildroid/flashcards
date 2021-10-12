@@ -34,8 +34,17 @@ class RemoteRepository extends Provider {
   }
 
   @override
-  Future<Stats> getStats() {
-    return Future.value(Stats(days: [], memorizations: []));
+  Future<Stats> getStats() async {
+    print("getting stats");
+    return Future.value(Stats(days: [
+      DateTime.now().subtract(Duration(days: 1)),
+      DateTime.now().subtract(Duration(days: 2)),
+      DateTime.now().subtract(Duration(days: 6)),
+      DateTime.now().subtract(Duration(days: 5)),
+      DateTime.now().subtract(Duration(days: 6)),
+      DateTime.now().subtract(Duration(days: 10)),
+      DateTime.now().subtract(Duration(days: 11)),
+    ], memorizations: []));
   }
 
   @override
