@@ -1,6 +1,11 @@
 # flashcards
 
-A new Flutter project.
+
+Home screen                |  Practice screen
+:-------------------------:|:-------------------------:
+![home screen](screenshots/home.png)  |  ![practice screen](screenshots/practice.png)
+
+
 
 ## Getting Started
 
