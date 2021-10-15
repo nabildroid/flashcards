@@ -1,3 +1,5 @@
+import 'package:flashcards/core/scheduler.dart';
+
 enum MemorizationState {
   good,
   forget,
@@ -16,9 +18,10 @@ class Memorization {
 
 class CardMemorization extends Memorization {
   final String id;
-
+  final SchedulerProgress progress;
   CardMemorization({
     required this.id,
+    required this.progress,
     required MemorizationState state,
     required DateTime time,
   }) : super(state: state, time: time);

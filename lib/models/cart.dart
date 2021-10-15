@@ -1,3 +1,5 @@
+import 'package:flashcards/core/scheduler.dart';
+
 import 'memorization.dart';
 
 class Cart {
@@ -5,13 +7,13 @@ class Cart {
   final String term;
   final String definition;
   final List<String> tags;
-  final List<Memorization> history;
+  final SchedulerProgress progress;
 
   Cart({
     required this.id,
     required this.term,
     required this.definition,
     required this.tags,
-    required this.history,
+    required this.progress,
   });
 }

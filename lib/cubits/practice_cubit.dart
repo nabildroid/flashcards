@@ -77,6 +77,7 @@ class PracticeCubit extends Cubit<PracticeState> {
       id: card.id,
       state: feedback,
       time: DateTime.now(),
+      progress: _scheduler.sm2(feedback: feedback, prev: card.progress),
     );
 
     emit(state.copyWith(learned: [...state.learned, memorized]));
@@ -115,7 +116,7 @@ class PracticeCubit extends Cubit<PracticeState> {
     final cards = await _repository.getCards("");
     _scheduler.init(cards);
 
-    final selected = await _scheduler.selected();
+    final selected = await _scheduler.selected(10);
     emit(state.copyWith(
       learningCards: selected,
     ));

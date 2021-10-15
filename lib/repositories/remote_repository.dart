@@ -1,3 +1,4 @@
+import 'package:flashcards/core/scheduler.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/stats.dart';
@@ -14,21 +15,21 @@ class RemoteRepository extends Provider {
         term: "Card 1",
         definition: "efesfef",
         tags: [],
-        history: [],
+        progress: SchedulerProgress.init(),
       ),
       Cart(
         id: "efefe",
         term: "Card 2",
         definition: "efefzeresfef",
         tags: [],
-        history: [],
+        progress: SchedulerProgress.init(),
       ),
       Cart(
         id: "dsfs98e",
         term: "Card 3",
         definition: "efesfeffzefze",
         tags: [],
-        history: [],
+        progress: SchedulerProgress.init(),
       ),
     ]);
   }

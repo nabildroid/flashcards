@@ -58,7 +58,7 @@ class StatisticsCubit extends Cubit<StatisticsState> {
 
 int computeLongestChain(List<DateTime> days) {
   days.sort();
-  int runningChain = 0;
+  int runningChain = 1;
   int longestChain = 1;
   if (days.isEmpty) {
     return 0;
