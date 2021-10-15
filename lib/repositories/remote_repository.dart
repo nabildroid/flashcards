@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as Http;
+
 import 'package:flashcards/core/scheduler.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/score.dart';
@@ -6,32 +10,18 @@ import 'package:flashcards/models/stats.dart';
 import 'provider.dart';
 
 class RemoteRepository extends Provider {
+  //https://stackoverflow.com/questions/44250184/setting-environment-variables-in-flutter
+  //https://github.com/nabildroid/automation
+  static const endpoint = String.fromEnvironment('END_POINT',
+      defaultValue: 'http://localhost:8080');
+
   @override
   Future<List<Cart>> getCards(String setId) async {
-    await Future.delayed(Duration(seconds: 2));
-    return Future.value([
-      Cart(
-        id: "dsfsdf",
-        term: "Card 1",
-        definition: "efesfef",
-        tags: [],
-        progress: SchedulerProgress.init(),
-      ),
-      Cart(
-        id: "efefe",
-        term: "Card 2",
-        definition: "efefzeresfef",
-        tags: [],
-        progress: SchedulerProgress.init(),
-      ),
-      Cart(
-        id: "dsfs98e",
-        term: "Card 3",
-        definition: "efesfeffzefze",
-        tags: [],
-        progress: SchedulerProgress.init(),
-      ),
-    ]);
+    final response = await Http.get(Uri.parse(endpoint + "/flashcards"));
+
+    final items = jsonDecode(response.body) as List<dynamic>;
+
+    return items.map((e) => Cart.fromJson(e)).toList();
   }
 
   @override
@@ -50,6 +40,12 @@ class RemoteRepository extends Provider {
 
   @override
   Future<void> submitScore(Score score) async {
-    await Future.delayed(Duration(seconds: 5));
+    final body = {"score": score};
+    final data = jsonEncode(body);
+    await Http.post(
+      Uri.parse(endpoint + "/flashcards"),
+      headers: {"content-type": "application/json"},
+      body: data,
+    );
   }
 }

@@ -1,7 +1,5 @@
 import 'package:flashcards/core/scheduler.dart';
 
-import 'memorization.dart';
-
 class Cart {
   final String id;
   final String term;
@@ -16,4 +14,18 @@ class Cart {
     required this.tags,
     required this.progress,
   });
+
+  factory Cart.fromJson(Map json) {
+    return Cart(
+      id: json["id"],
+      definition: json["definition"],
+      progress: SchedulerProgress(
+        ease: json["progress"]["ease"],
+        interval: json["progress"]["interval"],
+        repetitions: json["progress"]["repetitions"],
+      ),
+      tags: json["tags"].cast<String>(),
+      term: json["term"],
+    );
+  }
 }

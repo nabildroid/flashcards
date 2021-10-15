@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'cubits/statistics_cubit.dart';
+import 'repositories/repository_factory.dart';
 
 class App extends MaterialApp {
   App()
@@ -12,7 +13,7 @@ class App extends MaterialApp {
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.dark,
           home: RepositoryProvider(
-            create: (_) => RemoteRepository(),
+            create: (_) => ReposityFactory.create(),
             child: BlocProvider(
               create: (ctx) => StatisticsCubit(
                 RepositoryProvider.of<RemoteRepository>(ctx),
