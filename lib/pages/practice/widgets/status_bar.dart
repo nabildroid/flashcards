@@ -1,4 +1,5 @@
 import 'package:flashcards/cubits/practice_cubit.dart';
+import 'package:flashcards/models/memorization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,16 +22,48 @@ class StatusBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CardNumber(),
-              Timer(),
+              BlocBuilder<PracticeCubit, PracticeState>(
+                  buildWhen: (p, n) =>
+                      p.index != n.index || p.learningCards.isEmpty,
+                  builder: (context, state) {
+                    return CardNumber(
+                      number: state.index,
+                      total: state.learningCards.length,
+                    );
+                  }),
+              BlocBuilder<PracticeCubit, PracticeState>(
+                  buildWhen: (p, n) => p.learningTime != n.learningTime,
+                  builder: (context, state) {
+                    return Timer(state.learningTime);
+                  }),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           SizedBox(
             height: 3,
             width: double.infinity,
-            child: Progress(),
-          )
+            child: BlocBuilder<PracticeCubit, PracticeState>(
+                buildWhen: (p, n) =>
+                    p.index != n.index || p.learningCards.isEmpty,
+                builder: (context, state) {
+                  return Progress([
+                    ...state.learned.map((l) {
+                      switch (l.state) {
+                        case MemorizationState.easy:
+                          return const Color(0xFF00A2C6);
+                        case MemorizationState.good:
+                          return const Color(0xFF41A430);
+                        default:
+                          return const Color(0xFFEF668F);
+                      }
+                    }),
+                    ...List.generate(
+                      state.learningCards.length - state.index,
+                      (_) => const Color(0xFF9BD1E5),
+                    )
+                  ]);
+                }),
+          ),
         ],
       ),
     );
@@ -38,7 +71,9 @@ class StatusBar extends StatelessWidget {
 }
 
 class Timer extends StatelessWidget {
-  const Timer({
+  final String time;
+  const Timer(
+    this.time, {
     Key? key,
   }) : super(key: key);
 
@@ -47,14 +82,14 @@ class Timer extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
+        const Icon(
           Icons.timer,
           color: Color(0xFF157145),
         ),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
-          "88:88",
-          style: TextStyle(color: Color(0xFFD1FAFF)),
+          time,
+          style: const TextStyle(color: Color(0xFFD1FAFF)),
         ),
       ],
     );
@@ -62,23 +97,27 @@ class Timer extends StatelessWidget {
 }
 
 class CardNumber extends StatelessWidget {
+  final int number;
+  final int total;
   const CardNumber({
     Key? key,
+    required this.number,
+    required this.total,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return RichText(
-      text: const TextSpan(
-        text: "Card 1",
-        style: TextStyle(
+      text: TextSpan(
+        text: "Card " + number.toString(),
+        style: const TextStyle(
           color: Color(0xFFD1FAFF),
           fontWeight: FontWeight.w600,
         ),
         children: [
           TextSpan(
-            text: " / 2",
-            style: TextStyle(
+            text: " / " + total.toString(),
+            style: const TextStyle(
               color: Color(0xFF157145),
               fontWeight: FontWeight.normal,
             ),
@@ -90,7 +129,9 @@ class CardNumber extends StatelessWidget {
 }
 
 class Progress extends StatelessWidget {
-  const Progress({
+  final List<Color> colors;
+  const Progress(
+    this.colors, {
     Key? key,
   }) : super(key: key);
 
@@ -100,16 +141,16 @@ class Progress extends StatelessWidget {
       final width = constraints.maxWidth;
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(
-            10,
-            (_) => Container(
+        children: colors
+            .map((color) => Container(
                   height: double.infinity,
                   width: (width * .7) / 10,
                   decoration: BoxDecoration(
-                    color: Color(0xFF9BD1E5),
+                    color: color,
                     borderRadius: BorderRadius.circular(100),
                   ),
-                )).toList(),
+                ))
+            .toList(),
       );
     });
   }
