@@ -1,3 +1,4 @@
+import 'package:auto_size_text_pk/auto_size_text_pk.dart';
 import 'package:flutter/material.dart';
 
 class Flashcard extends StatefulWidget {
@@ -31,14 +32,6 @@ class _FlashcardState extends State<Flashcard> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(1, 1),
-            blurRadius: 5,
-            spreadRadius: 2,
-            color: Colors.black12,
-          )
-        ],
       ),
       child: GestureDetector(
         onTap: flip,
@@ -48,42 +41,91 @@ class _FlashcardState extends State<Flashcard> {
             fit: StackFit.expand,
             children: [
               AnimatedSlide(
-                offset: flipped ? Offset(0, 0) : Offset(0, 1),
+                offset: !flipped ? Offset(0, 0) : Offset(0, 1),
                 duration: Duration(milliseconds: 500),
-                child: Container(
-                  color: Colors.green.shade700,
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Center(
-                    child: Text(
-                      widget.tail,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                child: FlashcardFront(
+                  widget.head,
+                  color: Color(0xFF157145),
                 ),
               ),
               AnimatedSlide(
-                offset: !flipped ? Offset(0, 0) : Offset(0, -1),
+                offset: flipped ? Offset(0, 0) : Offset(0, -1),
                 duration: Duration(milliseconds: 500),
-                child: Container(
-                  color: Colors.green,
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Center(
-                    child: Text(
-                      widget.head,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                child: FlashcardFront(
+                  widget.tail,
+                  color: Color(0xFF1C8E58),
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class FlashcardFront extends StatelessWidget {
+  const FlashcardFront(
+    this.text, {
+    required this.color,
+    Key? key,
+  }) : super(key: key);
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Material(
+        color: color,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: SizedBox(
+                height: 25,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      color: Color(0xFFD1FAFF),
+                      iconSize: 16,
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.edit,
+                      ),
+                    ),
+                    IconButton(
+                      color: Color(0xFFD1FAFF),
+                      iconSize: 16,
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.favorite_border,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: AutoSizeText(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -56,28 +56,24 @@ class _PracticeState extends State<Practice> {
                   ),
                 ),
               ),
-              BlocBuilder<PracticeCubit, PracticeState>(
-                  buildWhen: (p, n) => p.status != n.status,
-                  builder: (context, state) {
-                    return AnimatedSlide(
-                      offset: state.status == PracticeStatus.practicing
-                          ? Offset(0, 0)
-                          : Offset(0, 1),
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                      child: LearningFeedback(
-                        easy: () => context
-                            .read<PracticeCubit>()
-                            .addFeedback(MemorizationState.easy),
-                        hard: () => context
-                            .read<PracticeCubit>()
-                            .addFeedback(MemorizationState.forget),
-                        good: () => context
-                            .read<PracticeCubit>()
-                            .addFeedback(MemorizationState.good),
-                      ),
-                    );
-                  }),
+              Padding(
+                padding: const EdgeInsets.all(18).copyWith(
+                  top: 0,
+                ),
+                child: BlocBuilder<PracticeCubit, PracticeState>(
+                    buildWhen: (p, n) => p.status != n.status,
+                    builder: (context, state) {
+                      final addFeedback =
+                          context.read<PracticeCubit>().addFeedback;
+
+                      return LearningFeedback(
+                        enabled: state.status == PracticeStatus.practicing,
+                        easy: () => addFeedback(MemorizationState.easy),
+                        hard: () => addFeedback(MemorizationState.forget),
+                        good: () => addFeedback(MemorizationState.good),
+                      );
+                    }),
+              ),
             ],
           )),
     ));

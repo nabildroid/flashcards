@@ -128,7 +128,7 @@ class PracticeCubit extends Cubit<PracticeState> {
   void _resumeLearning() {
     emit(state.copyWith(status: PracticeStatus.paused));
 
-    Future.delayed(const Duration(seconds: 1)).then((_) {
+    Future.delayed(const Duration(seconds: 5)).then((_) {
       if (state.status == PracticeStatus.paused) {
         emit(state.copyWith(
           status: PracticeStatus.practicing,

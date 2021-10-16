@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'feedback_button.dart';
+
 class LearningFeedback extends StatelessWidget {
   final Function hard;
   final Function good;
   final Function easy;
+  final bool enabled;
   const LearningFeedback({
     Key? key,
     required this.hard,
     required this.good,
     required this.easy,
+    required this.enabled,
   }) : super(key: key);
 
   @override
@@ -16,59 +20,28 @@ class LearningFeedback extends StatelessWidget {
     return SizedBox(
       height: 35,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: FeedbackButton(
-              color: Colors.red,
-              label: "Hard",
-              onPressed: hard,
-            ),
+          FeedbackButton(
+            colors: [Color(0xFFEF668F), Color(0xFFEF4848)],
+            label: "Hard",
+            onPressed: hard,
+            enabled: enabled,
           ),
-          Expanded(
-            child: FeedbackButton(
-              color: Colors.green,
-              label: "Good",
-              onPressed: good,
-            ),
+          FeedbackButton(
+            colors: [Color(0xFF50A888), Color(0xFF41A430)],
+            label: "Good",
+            onPressed: good,
+            enabled: enabled,
           ),
-          Expanded(
-            child: FeedbackButton(
-              color: Colors.blueGrey,
-              label: "easy",
-              onPressed: easy,
-            ),
+          FeedbackButton(
+            colors: [Color(0xFF3FCEBD), Color(0xFF00A2C6)],
+            label: "easy",
+            onPressed: easy,
+            enabled: enabled,
           ),
         ],
       ),
-    );
-  }
-}
-
-class FeedbackButton extends StatelessWidget {
-  final Function onPressed;
-  final Color color;
-  final String label;
-  const FeedbackButton({
-    Key? key,
-    required this.onPressed,
-    required this.color,
-    required this.label,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        backgroundColor: color,
-        primary: Colors.white,
-        elevation: 0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
-      ),
-      onPressed: () => onPressed(),
-      child: Text(label),
     );
   }
 }
