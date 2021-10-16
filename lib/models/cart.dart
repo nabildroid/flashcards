@@ -6,6 +6,7 @@ class Cart {
   final String definition;
   final List<String> tags;
   final SchedulerProgress progress;
+  final bool boosted;
 
   Cart({
     required this.id,
@@ -13,6 +14,7 @@ class Cart {
     required this.definition,
     required this.tags,
     required this.progress,
+    this.boosted = false,
   });
 
   factory Cart.fromJson(Map json) {
@@ -26,6 +28,7 @@ class Cart {
       ),
       tags: json["tags"].cast<String>(),
       term: json["term"],
+      boosted: json["boosted"] ?? false,
     );
   }
 }

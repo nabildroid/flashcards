@@ -62,17 +62,29 @@ class Scheduler {
 
   List<Vote> election() {
     return cards
-        .map((card) => Vote(card, computeScore(card.progress)))
+        .map(
+          (card) => Vote(
+              card,
+              computeScore(
+                card.progress,
+                boost: card.boosted,
+              )),
+        )
         .toList();
   }
 
-  double computeScore(SchedulerProgress progress) {
+  double computeScore(SchedulerProgress progress, {bool boost = false}) {
     double total = 0.0;
     total += progress.repetitions / (progress.ease * 10);
+    // todo interval here always start from day zero while the now,well start at 1970 :!
     total += progress.interval - dateInDays(DateTime.now());
 
     if (progress.repetitions < 2) {
       total -= 10;
+    }
+
+    if (boost) {
+      total -= total / 2;
     }
 
     return total;

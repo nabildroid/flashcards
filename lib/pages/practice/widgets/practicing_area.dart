@@ -59,6 +59,9 @@ class PracticingArea extends StatelessWidget {
                       child: Flashcard(
                         head: cart.term,
                         tail: cart.definition,
+                        favorit: cart.boosted,
+                        togglefavorit:
+                            context.read<PracticeCubit>().toggleBoosted,
                       ),
                     ),
                   )

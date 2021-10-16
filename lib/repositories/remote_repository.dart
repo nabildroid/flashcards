@@ -48,4 +48,15 @@ class RemoteRepository extends Provider {
       body: data,
     );
   }
+
+  @override
+  Future<void> updateSpecialCard(String id, bool boosted) async {
+    final data = {"id": id, "boosted": boosted};
+    final body = jsonEncode(data);
+    await Http.post(
+      Uri.parse(endpoint + "/updateSpecialFlashcard"),
+      headers: {"content-type": "application/json"},
+      body: body,
+    );
+  }
 }

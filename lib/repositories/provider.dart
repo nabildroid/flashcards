@@ -8,4 +8,6 @@ abstract class Provider {
   Future<Stats> getStats();
 
   Future<void> submitScore(Score score);
+
+  Future<void> updateSpecialCard(String id, bool boosted);
 }

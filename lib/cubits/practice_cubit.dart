@@ -137,6 +137,14 @@ class PracticeCubit extends Cubit<PracticeState> {
     });
   }
 
+  Future<bool> toggleBoosted(bool boosted) async {
+    if (state.status != PracticeStatus.saving) {
+      final card = state.learningCards[state.index];
+      await _repository.updateSpecialCard(card.id, boosted);
+    }
+    return boosted;
+  }
+
   void _startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state.status == PracticeStatus.saving) {

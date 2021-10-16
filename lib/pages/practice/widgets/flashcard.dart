@@ -5,13 +5,15 @@ class Flashcard extends StatefulWidget {
   final String head;
   final String tail;
 
-  final bool isDemo;
+  final Future<bool> Function(bool favorit)? togglefavorit;
+  final bool favorit;
 
   const Flashcard({
     Key? key,
     required this.head,
     required this.tail,
-    this.isDemo = false,
+    this.favorit = false,
+    this.togglefavorit,
   }) : super(key: key);
 
   @override
@@ -46,6 +48,8 @@ class _FlashcardState extends State<Flashcard> {
                 child: FlashcardFront(
                   widget.head,
                   color: Color(0xFF157145),
+                  favorit: widget.favorit,
+                  togglefavorit: widget.togglefavorit,
                 ),
               ),
               AnimatedSlide(
@@ -54,6 +58,8 @@ class _FlashcardState extends State<Flashcard> {
                 child: FlashcardFront(
                   widget.tail,
                   color: Color(0xFF1C8E58),
+                  favorit: widget.favorit,
+                  togglefavorit: widget.togglefavorit,
                 ),
               ),
             ],
@@ -64,10 +70,15 @@ class _FlashcardState extends State<Flashcard> {
   }
 }
 
-class FlashcardFront extends StatelessWidget {
+class FlashcardFront extends StatefulWidget {
+  final Future<bool> Function(bool favorit)? togglefavorit;
+  final bool favorit;
+
   const FlashcardFront(
     this.text, {
     required this.color,
+    this.favorit = false,
+    this.togglefavorit,
     Key? key,
   }) : super(key: key);
 
@@ -75,47 +86,69 @@ class FlashcardFront extends StatelessWidget {
   final Color color;
 
   @override
+  State<FlashcardFront> createState() => _FlashcardFrontState();
+}
+
+class _FlashcardFrontState extends State<FlashcardFront> {
+  late bool favorit;
+
+  @override
+  void initState() {
+    favorit = widget.favorit;
+    // TODO: implement initState
+    super.initState();
+  }
+
+  toggleFavorit() async {
+    final isFavorit = await widget.togglefavorit!(!favorit);
+    setState(() {
+      favorit = isFavorit;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Material(
-        color: color,
+        color: widget.color,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: SizedBox(
-                height: 25,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      color: Color(0xFFD1FAFF),
-                      iconSize: 16,
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.edit,
+            if (widget.togglefavorit != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: SizedBox(
+                  height: 25,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        color: Color(0xFFD1FAFF),
+                        iconSize: 16,
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.edit,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      color: Color(0xFFD1FAFF),
-                      iconSize: 16,
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.favorite_border,
+                      IconButton(
+                        color: Color(0xFFD1FAFF),
+                        iconSize: 16,
+                        onPressed: toggleFavorit,
+                        icon: Icon(
+                          favorit ? Icons.favorite : Icons.favorite_border,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                   child: AutoSizeText(
-                    text,
+                    widget.text,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
