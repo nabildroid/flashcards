@@ -20,7 +20,7 @@ class Chart extends StatelessWidget {
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
           barTouchData: BarTouchData(
-            enabled: false,
+            enabled: true,
           ),
           gridData: FlGridData(
             show: true,

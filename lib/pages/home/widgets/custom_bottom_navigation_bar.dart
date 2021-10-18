@@ -1,4 +1,10 @@
+import 'package:flashcards/cubits/practice_cubit.dart';
+import 'package:flashcards/cubits/statistics_cubit.dart';
+import 'package:flashcards/models/score.dart';
+import 'package:flashcards/pages/practice/practice.dart';
+import 'package:flashcards/repositories/remote_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({
@@ -34,7 +40,19 @@ class CustomBottomNavigationBar extends StatelessWidget {
             label: "Random",
           ),
           Button(
-            onPressed: () {},
+            onPressed: () async {
+              final score = await Navigator.push<Score>(
+                context,
+                Practice.route(
+                  PracticeCubit(
+                      RepositoryProvider.of<RemoteRepository>(context)),
+                ),
+              );
+
+              if (score != null) {
+                context.read<StatisticsCubit>().addScore(score);
+              }
+            },
             icon: Icons.quiz_outlined,
             label: "Practice",
             autoFocus: true,

@@ -1,5 +1,7 @@
+import 'package:flashcards/cubits/statistics_cubit.dart';
 import 'package:flashcards/pages/home/widgets/statistic_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Streaks extends StatelessWidget {
   const Streaks({
@@ -19,52 +21,68 @@ class Streaks extends StatelessWidget {
               ),
         ),
         StatisticCard([
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(
-              6,
-              (index) => Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  // color: Colors.indigoAccent,
-                  border: Border.all(
-                    width: 3,
-                    color: Colors.black26,
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    "A",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      // color: Colors.indigo.shade50,
+          BlocBuilder<StatisticsCubit, StatisticsState>(
+            buildWhen: (p, n) => p.last7DaysStreak != n.last7DaysStreak,
+            builder: (context, state) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: state.last7DaysStreak
+                  .map(
+                    (day) => Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: day.completed
+                            ? Colors.indigoAccent
+                            : Colors.transparent,
+                        border: Border.all(
+                          width: 3,
+                          color: Colors.black26,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          day.day,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: day.completed
+                                ? Colors.indigo.shade50
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
+                  )
+                  .toList(),
             ),
           ),
           const SizedBox(height: 24),
           Row(
-            children: const [
+            children: [
               Expanded(
-                child: StreakCard(
-                  title: "Current Streak",
-                  unit: "days",
-                  value: 5,
-                ),
+                child: BlocBuilder<StatisticsCubit, StatisticsState>(
+                    buildWhen: (p, n) => p.currentChain != n.currentChain,
+                    builder: (context, state) {
+                      return StreakCard(
+                        title: "Current Streak",
+                        unit: "days",
+                        value: state.currentChain,
+                      );
+                    }),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 12,
               ),
               Expanded(
-                child: StreakCard(
-                  title: "Best Streak",
-                  unit: "days in row",
-                  value: 55,
-                ),
+                child: BlocBuilder<StatisticsCubit, StatisticsState>(
+                    buildWhen: (p, n) => p.longestChain != n.longestChain,
+                    builder: (context, state) {
+                      return StreakCard(
+                        title: "Best Streak",
+                        unit: "days in row",
+                        value: state.longestChain,
+                      );
+                    }),
               ),
             ],
           )

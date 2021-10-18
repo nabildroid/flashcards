@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/utils.dart';
+import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/score.dart';
+import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/repositories/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,28 +16,48 @@ class ChainDay {
 class StatisticsState extends Equatable {
   final int longestChain;
   final int currentChain;
-  final List<ChainDay> last5Days;
-  final List<DateTime> days;
+  final List<ChainDay> last7DaysStreak;
+  final List<Stats> daysStats;
+  final List<Stats> allStats;
 
   StatisticsState({
-    required this.days,
-  })  : currentChain = computeCurrentChain(days),
-        longestChain = computeLongestChain(days),
-        last5Days = computeLast5Days(days);
+    required this.longestChain,
+    required this.currentChain,
+    required this.last7DaysStreak,
+    required this.daysStats,
+    required this.allStats,
+  });
 
   static StatisticsState init() {
     print("initng");
-    return StatisticsState(days: []);
+    return StatisticsState(
+      currentChain: 0,
+      longestChain: 0,
+      last7DaysStreak: [],
+      daysStats: [],
+      allStats: [],
+    );
   }
 
-  StatisticsState copyWith({List<DateTime>? days}) {
+  StatisticsState copyWith({
+    int? longestChain,
+    int? currentChain,
+    List<ChainDay>? last7DaysStreak,
+    List<Stats>? daysStats,
+    List<Stats>? allStats,
+  }) {
     return StatisticsState(
-      days: days ?? this.days,
+      currentChain: currentChain ?? this.currentChain,
+      daysStats: daysStats ?? this.daysStats,
+      last7DaysStreak: last7DaysStreak ?? this.last7DaysStreak,
+      longestChain: longestChain ?? this.longestChain,
+      allStats: allStats ?? this.allStats,
     );
   }
 
   @override
-  List<Object?> get props => [longestChain, currentChain, last5Days];
+  List<Object?> get props =>
+      [longestChain, currentChain, last7DaysStreak, daysStats];
 }
 
 class StatisticsCubit extends Cubit<StatisticsState> {
@@ -45,14 +67,63 @@ class StatisticsCubit extends Cubit<StatisticsState> {
   }
 
   void fetch() async {
-    print("fetching");
     final stats = await _provider.getStats();
-    final days = uniqueDates(stats.days);
-    emit(state.copyWith(days: days));
+
+    _emitStats(stats);
+  }
+
+  _emitStats(List<Stats> stats) {
+    final days = stats.map((s) => s.date).toList();
+
+    emit(
+      state.copyWith(
+        allStats: stats,
+        currentChain: computeCurrentChain(days),
+        last7DaysStreak: computeLast6Days(days),
+        longestChain: computeLongestChain(days),
+        daysStats: getLastStatsDays(stats, 7),
+      ),
+    );
   }
 
   void addScore(Score score) {
-    emit(state.copyWith(days: [...state.days, DateTime.now()]));
+    final newTodayStats = score.cards.fold<Stats>(
+      Stats(DateTime.now(), {}),
+      (previousValue, element) {
+        previousValue.states.putIfAbsent(element.state, () => 0);
+        previousValue.states.update(element.state, (value) => value + 1);
+
+        return previousValue;
+      },
+    );
+
+    try {
+      final prevTodayStats = state.allStats.firstWhere((element) =>
+          dateInDays(element.date) == dateInDays(newTodayStats.date));
+
+      // final uniqueKeys = Set()
+      //   ..addAll([...prevTodayStats.states.keys, ...newTodayStats.states.keys]);
+
+      final mergedTodayStats = new Stats(newTodayStats.date, {});
+
+      prevTodayStats.states.forEach((key, value) {
+        mergedTodayStats.states.putIfAbsent(key, () => 0);
+        mergedTodayStats.states.update(key, (v) => v + value);
+      });
+
+      newTodayStats.states.forEach((key, value) {
+        mergedTodayStats.states.putIfAbsent(key, () => 0);
+        mergedTodayStats.states.update(key, (v) => v + value);
+      });
+
+      _emitStats([
+        ...state.allStats.where((element) =>
+            dateInDays(element.date) != dateInDays(mergedTodayStats.date)),
+        mergedTodayStats,
+      ]);
+    } catch (e) {
+      _emitStats([...state.allStats, newTodayStats]);
+    }
   }
 }
 
@@ -97,18 +168,41 @@ int computeCurrentChain(List<DateTime> days) {
   return 1;
 }
 
-List<ChainDay> computeLast5Days(List<DateTime> days) {
-  final last5Days = [
-    DateTime.now().subtract(Duration(days: 0)),
-    DateTime.now().subtract(Duration(days: 1)),
-    DateTime.now().subtract(Duration(days: 2)),
-    DateTime.now().subtract(Duration(days: 3)),
-    DateTime.now().subtract(Duration(days: 4)),
-  ];
+List<Stats> getLastStatsDays(List<Stats> stats, int n) {
+  final lastNDays = List.generate(
+      n, (index) => DateTime.now().subtract(Duration(days: index)));
 
-  return last5Days
+  return lastNDays.map((day) {
+    try {
+      return stats
+          .firstWhere((element) => dateInDays(element.date) == dateInDays(day));
+    } catch (e) {
+      return Stats(day, {});
+    }
+  }).toList();
+}
+
+List<ChainDay> computeLast6Days(List<DateTime> days) {
+  final last7Days = [
+    DateTime.now().subtract(const Duration(days: 5)),
+    DateTime.now().subtract(const Duration(days: 4)),
+    DateTime.now().subtract(const Duration(days: 3)),
+    DateTime.now().subtract(const Duration(days: 2)),
+    DateTime.now().subtract(const Duration(days: 1)),
+    DateTime.now().subtract(const Duration(days: 0)),
+  ];
+  final weekDayString = [
+    "M",
+    "T",
+    "W",
+    "T",
+    "F",
+    "S",
+    "S",
+  ];
+  return last7Days
       .map((date) => ChainDay(
-            "day", // todo implement this!
+            weekDayString[date.weekday - 1],
             days.any((day) => dateInDays(date) == dateInDays(day)),
           ))
       .toList();

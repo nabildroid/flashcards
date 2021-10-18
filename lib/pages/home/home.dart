@@ -51,30 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(),
-
-      // floatingActionButton: Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //   children: [
-      //     FloatingActionButton.extended(
-      //       onPressed: () {},
-      //       label: Text("Practice"),
-      //       icon: Icon(Icons.quiz_outlined),
-      //       extendedPadding: const EdgeInsets.symmetric(horizontal: 6),
-      //     ),
-      //     FloatingActionButton.extended(
-      //       onPressed: () {},
-      //       label: Text("Favorit"),
-      //       icon: Icon(Icons.star),
-      //       extendedPadding: const EdgeInsets.symmetric(horizontal: 6),
-      //     ),
-      //     FloatingActionButton.extended(
-      //       onPressed: () {},
-      //       label: Text("Random"),
-      //       icon: Icon(Icons.shuffle),
-      //       extendedPadding: const EdgeInsets.symmetric(horizontal: 6),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

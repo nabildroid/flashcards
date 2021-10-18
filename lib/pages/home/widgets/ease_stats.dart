@@ -1,4 +1,8 @@
+import 'package:flashcards/core/utils.dart';
+import 'package:flashcards/cubits/statistics_cubit.dart';
+import 'package:flashcards/models/memorization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'chart.dart';
 import 'statistic_card.dart';
@@ -40,28 +44,27 @@ class EaseStats extends StatelessWidget {
           SizedBox(
             height: 180,
             width: double.infinity,
-            child: Chart(
-              colors: [
-                Colors.green.shade300,
-                Colors.green.shade500,
-                Colors.green.shade800
-              ],
-              xLabels: [
-                "13 oct",
-                "14 oct",
-                "15 oct",
-                "13 oct",
-                "14 oct",
-                "15 oct",
-              ],
-              data: [
-                [2, 5, 3],
-                [6, 2, 6],
-                [6, 2, 6],
-                [6, 2, 6],
-                [6, 2, 6],
-                [8, 1, 1],
-              ],
+            child: BlocBuilder<StatisticsCubit, StatisticsState>(
+              buildWhen: (p, n) => p.daysStats != n.daysStats,
+              builder: (context, state) => Chart(
+                colors: [
+                  Color(0xFF41A430),
+                  Color(0xFFEF4848),
+                  Color(0xFF00A2C6),
+                ],
+                xLabels: state.daysStats.reversed
+                    .map((e) => monthDayFromDate(e.date))
+                    .toList(),
+                data: state.daysStats.reversed
+                    .map((e) => MemorizationState.values.map((s) {
+                          if (e.states.containsKey(s)) {
+                            return e.states[s]!.toDouble();
+                          } else {
+                            return 0.0;
+                          }
+                        }).toList())
+                    .toList(),
+              ),
             ),
           ),
           Text(
