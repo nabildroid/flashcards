@@ -91,6 +91,10 @@ class PracticeCubit extends Cubit<PracticeState> {
   Future<void> _submit() async {
     final score = getScore();
     await _repository.submitScore(score);
+    finish();
+  }
+
+  void finish() {
     emit(state.copyWith(status: PracticeStatus.finished));
   }
 
@@ -113,7 +117,7 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   void fetch() async {
     emit(state.copyWith(status: PracticeStatus.loading));
-    final cards = await _repository.getCards("");
+    final cards = await _repository.getCards();
     _scheduler.init(cards);
 
     final selected = await _scheduler.selected(10);
@@ -127,8 +131,10 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   void _resumeLearning() {
     emit(state.copyWith(status: PracticeStatus.paused));
+    // todo pause time should depend on previous card difficulty
+    final time = Duration(seconds: 5);
 
-    Future.delayed(const Duration(seconds: 5)).then((_) {
+    Future.delayed(time).then((_) {
       if (state.status == PracticeStatus.paused) {
         emit(state.copyWith(
           status: PracticeStatus.practicing,

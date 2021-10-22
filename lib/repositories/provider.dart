@@ -4,7 +4,7 @@ import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/stats.dart';
 
 abstract class Provider {
-  Future<List<Cart>> getCards(String setId);
+  Future<List<Cart>> getCards();
 
   Future<List<Stats>> getStats();
 

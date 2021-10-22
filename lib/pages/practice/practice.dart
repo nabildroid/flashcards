@@ -9,16 +9,7 @@ import 'widgets/learning_feedback.dart';
 import 'widgets/practicing_area.dart';
 
 class Practice extends StatefulWidget {
-  const Practice._({Key? key}) : super(key: key);
-
-  static route(PracticeCubit practiceCubit) {
-    return MaterialPageRoute<Score>(
-      builder: (_) => BlocProvider.value(
-        value: practiceCubit,
-        child: const Practice._(),
-      ),
-    );
-  }
+  const Practice({Key? key}) : super(key: key);
 
   @override
   _PracticeState createState() => _PracticeState();

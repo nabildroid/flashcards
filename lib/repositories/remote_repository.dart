@@ -15,7 +15,7 @@ class RemoteRepository extends Provider {
       defaultValue: 'https://supernabil.herokuapp.com');
 
   @override
-  Future<List<Cart>> getCards(String setId) async {
+  Future<List<Cart>> getCards() async {
     final response = await Http.get(Uri.parse(endpoint + "/flashcards"));
 
     final items = jsonDecode(response.body) as List<dynamic>;
