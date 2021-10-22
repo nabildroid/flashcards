@@ -1,4 +1,5 @@
 import 'package:flashcards/cubits/statistics_cubit.dart';
+import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/pages/home/widgets/app_bar.dart';
 import 'package:flashcards/pages/home/widgets/ease_stats.dart';
 import 'package:flashcards/pages/home/widgets/streaks.dart';

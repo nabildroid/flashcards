@@ -13,25 +13,27 @@ import 'repositories/repository_factory.dart';
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
     final _repo = ReposityFactory(RemoteRepository(), LocalRepository());
     return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          themeMode: ThemeMode.dark,
-          theme: ThemeData(
-            textTheme: GoogleFonts.robotoTextTheme(),
-            canvasColor: Color(0xFF6A8EAE),
-          ),
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      theme: ThemeData(
+        textTheme: GoogleFonts.robotoTextTheme(),
+        canvasColor: Color(0xFF6A8EAE),
+      ),
       home: RepositoryProvider.value(
         value: _repo,
-            child: BlocProvider(
+        child: BlocProvider(
           create: (ctx) => SyncCubit(_repo, CacheSync()),
           lazy: false,
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-              create: (ctx) => StatisticsCubit(
+                create: (ctx) => StatisticsCubit(
                   _repo,
-              ),
+                ),
               ),
               BlocProvider(
                 create: (ctx) => PracticeCubit(
@@ -39,10 +41,10 @@ class App extends StatelessWidget {
                 ),
               ),
             ],
-              child: HomeScreen(),
-            ),
+            child: HomeScreen(),
           ),
+        ),
       ),
-        );
+    );
   }
 }
