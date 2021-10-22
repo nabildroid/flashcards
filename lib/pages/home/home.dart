@@ -29,11 +29,21 @@ class _HomeScreenState extends State<HomeScreen> {
         shadowColor: Colors.black26,
         backgroundColor: Colors.white,
         title: const TextLogo(),
-        actions: const [
-          Sources(),
-          SizedBox(width: 20),
-          Icon(Icons.sync, color: Colors.black),
-          SizedBox(width: 8),
+        actions: [
+          const Sources(),
+          const SizedBox(width: 20),
+          BlocBuilder<SyncCubit, SyncState>(
+            buildWhen: (n, p) => n.index != p.index,
+            builder: (ctx, state) => state == SyncState.synced
+                ? const SizedBox.shrink()
+                : Icon(
+                    Icons.sync,
+                    color: state == SyncState.syncing
+                        ? Colors.green
+                        : Colors.black87,
+                  ),
+          ),
+          const SizedBox(width: 8),
         ],
       ),
       body: SizedBox.expand(
