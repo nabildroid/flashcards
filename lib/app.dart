@@ -3,6 +3,7 @@ import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/pages/home/home.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
 import 'package:flashcards/services/cache_sync.dart';
+import 'package:flashcards/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _repo = ReposityFactory(RemoteRepository(), LocalRepository());
+    final _localRepo = LocalRepository(Database());
+    final _repo = ReposityFactory(
+      RemoteRepository(),
+      _localRepo,
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,

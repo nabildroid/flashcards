@@ -13,21 +13,21 @@ class SyncCubit extends Cubit<SyncState> {
   late final CacheSync _cache;
 
   SyncCubit(this._provider, this._cache) : super(SyncState.init) {
-    sync();
-
     _provider.hookSync(this);
+    print("going to sync :)");
+    sync();
   }
 
   void sync() async {
-    try {
-      emit(SyncState.syncing);
-      await Future.delayed(Duration(seconds: 2));
-      final dates = _cache.get();
-      print(dates);
-      await _provider.getLatestUpdates(dates);
-      emit(SyncState.synced);
-    } catch (e) {
-      emit(SyncState.init);
-    }
+    // try {
+    emit(SyncState.syncing);
+    final dates = await _cache.get();
+    print(dates.toJson());
+    await _provider.getLatestUpdates(dates);
+    // todo update cachedSync
+    emit(SyncState.synced);
+    // } catch (e) {
+    //   emit(SyncState.init);
+    // }
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flashcards/models/cached_sync_dates.dart';
+import 'package:flashcards/models/sync_data.dart';
 import 'package:http/http.dart' as Http;
 
 import 'package:flashcards/models/cart.dart';
@@ -54,5 +56,17 @@ class RemoteRepository extends Provider {
       headers: {"content-type": "application/json"},
       body: body,
     );
+  }
+
+  @override
+  Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
+    final url = Uri.parse(endpoint + "/flashcards")
+      ..replace(queryParameters: dates.toJson());
+
+    print(url);
+    final response = await Http.get(url);
+
+    final json = jsonDecode(response.body) as Map;
+    return SyncData.fromJson(json);
   }
 }

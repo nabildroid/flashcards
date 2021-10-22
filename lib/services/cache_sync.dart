@@ -6,21 +6,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CacheSync {
   static const key = "cached_sync_dates";
 
-  late final SharedPreferences _instance;
+  late final Future<SharedPreferences> _instance;
 
   CacheSync() {
-    SharedPreferences.getInstance().then((db) => _instance = db);
+    _instance = SharedPreferences.getInstance();
   }
 
   save(CachedSyncDates dates) async {
-    final toStore = get().merge(dates).toJson();
+    final toStore = (await get()).merge(dates).toJson();
 
     // todo merge the new one with the old one
-    await _instance.setString(key, jsonEncode(toStore));
+    await (await _instance).setString(key, jsonEncode(toStore));
   }
 
-  CachedSyncDates get() {
-    final stored = _instance.getString(key) ?? "{}";
+  Future<CachedSyncDates> get() async {
+    final stored = (await _instance).getString(key) ?? "{}";
     return CachedSyncDates.fromJson(jsonDecode(stored));
   }
 }

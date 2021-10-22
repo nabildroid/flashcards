@@ -4,6 +4,7 @@ import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/sync_data.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
 
 import 'local_repository.dart';
@@ -47,8 +48,8 @@ class ReposityFactory extends Provider {
   }
 
   @override
-  Future<dynamic> getLatestUpdates(CachedSyncDates dates) async {
-    print(await isOnline);
+  Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
+    return _remote.getLatestUpdates(dates);
   }
 
   @override
