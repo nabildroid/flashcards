@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flashcards/core/utils.dart';
-import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/entities.dart/progress.dart';
 import 'package:flashcards/models/memorization.dart';
+import 'package:flashcards/models/progress.dart';
 
 extension MemorizationStateQuality on MemorizationState {
   int quality() {
@@ -16,64 +17,38 @@ extension MemorizationStateQuality on MemorizationState {
   }
 }
 
-class SchedulerProgress {
-  final int interval;
-  final double ease;
-  final int repetitions;
-
-  SchedulerProgress({
-    required this.interval,
-    required this.ease,
-    required this.repetitions,
-  });
-
-  SchedulerProgress.init()
-      : ease = 1.3,
-        interval = 1,
-        repetitions = 0;
-}
-
 class Vote {
   final double score;
-  final Cart cart;
+  final Progress progress;
 
-  Vote(this.cart, this.score);
+  Vote(this.progress, this.score);
 }
 
 class Scheduler {
-  List<Cart> cards = [];
+  List<Progress> progress = [];
 
   Scheduler();
 
-  void init(List<Cart> cards) {
-    this.cards = cards;
+  void init(List<Progress> progress) {
+    this.progress = progress;
   }
 
-  Future<List<Cart>> selected(int limit) async {
+  Future<List<Progress>> selected(int limit) async {
     await Future.value();
     final election = this.election();
     election.sort((a, b) => (a.score - b.score).toInt());
 
     return election
         .sublist(0, min(election.length, limit))
-        .map((e) => e.cart)
+        .map((e) => e.progress)
         .toList();
   }
 
   List<Vote> election() {
-    return cards
-        .map(
-          (card) => Vote(
-              card,
-              computeScore(
-                card.progress,
-                boost: card.boosted,
-              )),
-        )
-        .toList();
+    return progress.map((p) => Vote(p, computeScore(p))).toList();
   }
 
-  double computeScore(SchedulerProgress progress, {bool boost = false}) {
+  double computeScore(ProgressEntity progress, {bool boost = false}) {
     double total = 0.0;
     total += progress.repetitions / (progress.ease * 10);
     // todo interval here always start from day zero while the now,well start at 1970 :!
@@ -90,9 +65,9 @@ class Scheduler {
     return total;
   }
 
-  SchedulerProgress sm2({
+  ProgressEntity sm2({
     required MemorizationState feedback,
-    required SchedulerProgress prev,
+    required ProgressEntity prev,
     int dueInterval = 0,
   }) {
     final quality = feedback.quality();
@@ -117,7 +92,7 @@ class Scheduler {
       ease = max(1.3, prev.ease);
     }
 
-    return SchedulerProgress(
+    return ProgressEntity(
       ease: ease,
       interval: interval,
       repetitions: repetitions,

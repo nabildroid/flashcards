@@ -24,11 +24,11 @@ class StatusBar extends StatelessWidget {
             children: [
               BlocBuilder<PracticeCubit, PracticeState>(
                   buildWhen: (p, n) =>
-                      p.index != n.index || p.learningCards.isEmpty,
+                      p.index != n.index || p.toPractice.isEmpty,
                   builder: (context, state) {
                     return CardNumber(
                       number: state.index,
-                      total: state.learningCards.length,
+                      total: state.toPractice.length,
                     );
                   }),
               BlocBuilder<PracticeCubit, PracticeState>(
@@ -43,11 +43,10 @@ class StatusBar extends StatelessWidget {
             height: 3,
             width: double.infinity,
             child: BlocBuilder<PracticeCubit, PracticeState>(
-                buildWhen: (p, n) =>
-                    p.index != n.index || p.learningCards.isEmpty,
+                buildWhen: (p, n) => p.index != n.index || p.toPractice.isEmpty,
                 builder: (context, state) {
                   return Progress([
-                    ...state.learned.map((l) {
+                    ...state.reviewed.map((l) {
                       switch (l.state) {
                         case MemorizationState.easy:
                           return const Color(0xFF00A2C6);
@@ -58,7 +57,7 @@ class StatusBar extends StatelessWidget {
                       }
                     }),
                     ...List.generate(
-                      state.learningCards.length - state.index,
+                      state.toPractice.length - state.index,
                       (_) => const Color(0xFF9BD1E5),
                     )
                   ]);

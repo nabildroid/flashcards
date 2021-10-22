@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/scheduler.dart';
-import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/memorization.dart';
+import 'package:flashcards/models/practice_cart.dart';
+import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/repositories/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +18,13 @@ enum PracticeStatus {
   init,
 }
 
+enum PracticeMode {
+  learning,
+}
+
 class PracticeState extends Equatable {
-  final List<Cart> learningCards;
-  final List<CardMemorization> learned;
+  final List<PracticeCart> toPractice;
+  final List<CardMemorization> reviewed;
 
   final DateTime startTime;
   final int index;
@@ -28,33 +33,33 @@ class PracticeState extends Equatable {
 
   final PracticeStatus status;
 
-  PracticeState({
-    required this.learningCards,
-    required this.learned,
+  const PracticeState({
+    required this.toPractice,
+    required this.reviewed,
     required this.startTime,
     required this.status,
     required this.learningTime,
-  })  : index = learned.length,
-        total = learningCards.length;
+  })  : index = reviewed.length,
+        total = toPractice.length;
 
   factory PracticeState.init() => PracticeState(
-        learned: [],
-        learningCards: [],
+        reviewed: const [],
+        toPractice: const [],
         startTime: DateTime.now(),
         status: PracticeStatus.init,
         learningTime: "00:00",
       );
 
   copyWith({
-    List<CardMemorization>? learned,
-    List<Cart>? learningCards,
+    List<CardMemorization>? reviewed,
+    List<PracticeCart>? toPractice,
     PracticeStatus? status,
     String? learningTime,
   }) {
     return PracticeState(
-      learningCards: learningCards ?? this.learningCards,
-      learned: learned ?? this.learned,
-      startTime: learningCards != null ? DateTime.now() : startTime,
+      toPractice: toPractice ?? this.toPractice,
+      reviewed: reviewed ?? this.reviewed,
+      startTime: toPractice != null ? DateTime.now() : startTime,
       status: status ?? this.status,
       learningTime: learningTime ?? this.learningTime,
     );
@@ -62,7 +67,7 @@ class PracticeState extends Equatable {
 
   @override
   List<Object?> get props =>
-      [learningCards, learned, startTime, index, total, status, learningTime];
+      [toPractice, reviewed, startTime, index, total, status, learningTime];
 }
 
 class PracticeCubit extends Cubit<PracticeState> {
@@ -72,16 +77,17 @@ class PracticeCubit extends Cubit<PracticeState> {
   PracticeCubit(this._repository) : super(PracticeState.init());
 
   void addFeedback(MemorizationState feedback) async {
-    final card = state.learningCards[state.index];
+    final practice = state.toPractice[state.index];
+
     final memorized = CardMemorization(
-      id: card.id,
+      id: practice.cart.id,
       state: feedback,
       time: DateTime.now(),
-      progress: _scheduler.sm2(feedback: feedback, prev: card.progress),
+      progress: _scheduler.sm2(feedback: feedback, prev: practice.progress),
     );
 
-    emit(state.copyWith(learned: [...state.learned, memorized]));
-    if (state.index == state.learningCards.length) {
+    emit(state.copyWith(reviewed: [...state.reviewed, memorized]));
+    if (state.index == state.toPractice.length) {
       return emit(state.copyWith(status: PracticeStatus.saving));
     }
 
@@ -100,7 +106,7 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   Score getScore() {
     return Score(
-      cards: state.learned,
+      cards: state.reviewed,
       startTime: state.startTime,
       endTime: DateTime.now(),
     );
@@ -117,16 +123,40 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   void fetch() async {
     emit(state.copyWith(status: PracticeStatus.loading));
-    final cards = await _repository.getCards();
-    _scheduler.init(cards);
 
-    final selected = await _scheduler.selected(10);
+    final selected = await _fetchPracticeCards(10, PracticeMode.learning);
+
     emit(state.copyWith(
-      learningCards: selected,
+      toPractice: selected,
     ));
 
     _resumeLearning();
     _startTimer();
+  }
+
+  Future<List<PracticeCart>> _fetchPracticeCards(
+      int limit, PracticeMode mode) async {
+    final prevProgress = await _repository.getProgress();
+    _scheduler.init(prevProgress);
+
+    List<Progress> chosen = [];
+    if (mode == PracticeMode.learning) {
+      chosen = await _scheduler.selected(limit);
+    }
+
+    final cartIds = chosen.map((progress) => progress.id).toList();
+    final carts = await _repository.getCardsByIds(cartIds);
+
+    final practiceCards = carts
+        .map(
+          (cart) => PracticeCart(
+            cart,
+            chosen.firstWhere((e) => e.id == cart.id),
+          ),
+        )
+        .toList();
+
+    return practiceCards;
   }
 
   void _resumeLearning() {
@@ -144,10 +174,11 @@ class PracticeCubit extends Cubit<PracticeState> {
   }
 
   Future<bool> toggleBoosted(bool boosted) async {
-    if (state.status != PracticeStatus.saving) {
-      final card = state.learningCards[state.index];
-      await _repository.updateSpecialCard(card.id, boosted);
-    }
+    // todo implement this!
+    // if (state.status != PracticeStatus.saving) {
+    //   final card = state.toPractice[state.index];
+    //   await _repository.updateSpecialCard(card.id, boosted);
+    // }
     return boosted;
   }
 

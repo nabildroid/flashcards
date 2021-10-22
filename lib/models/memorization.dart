@@ -1,4 +1,4 @@
-import 'package:flashcards/core/scheduler.dart';
+import 'package:flashcards/entities.dart/progress.dart';
 
 enum MemorizationState {
   good,
@@ -18,7 +18,7 @@ class Memorization {
 
 class CardMemorization extends Memorization {
   final String id;
-  final SchedulerProgress progress;
+  final ProgressEntity progress;
   CardMemorization({
     required this.id,
     required this.progress,

@@ -52,14 +52,14 @@ class PracticingArea extends StatelessWidget {
               clipBehavior: Clip.none,
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
-              children: state.learningCards
+              children: state.toPractice
                   .map(
-                    (cart) => Padding(
+                    (item) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18),
                       child: Flashcard(
-                        head: cart.term,
-                        tail: cart.definition,
-                        favorit: cart.boosted,
+                        head: item.cart.term,
+                        tail: item.cart.definition,
+                        favorit: false, //item.cart.boosted,
                         togglefavorit:
                             context.read<PracticeCubit>().toggleBoosted,
                       ),

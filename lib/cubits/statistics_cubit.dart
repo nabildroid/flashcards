@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/utils.dart';
+import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/stats.dart';
@@ -17,8 +18,8 @@ class StatisticsState extends Equatable {
   final int longestChain;
   final int currentChain;
   final List<ChainDay> last7DaysStreak;
-  final List<Stats> daysStats;
-  final List<Stats> allStats;
+  final List<StatsEntity> daysStats;
+  final List<StatsEntity> allStats;
 
   StatisticsState({
     required this.longestChain,
@@ -43,8 +44,8 @@ class StatisticsState extends Equatable {
     int? longestChain,
     int? currentChain,
     List<ChainDay>? last7DaysStreak,
-    List<Stats>? daysStats,
-    List<Stats>? allStats,
+    List<StatsEntity>? daysStats,
+    List<StatsEntity>? allStats,
   }) {
     return StatisticsState(
       currentChain: currentChain ?? this.currentChain,
@@ -72,7 +73,7 @@ class StatisticsCubit extends Cubit<StatisticsState> {
     _emitStats(stats);
   }
 
-  _emitStats(List<Stats> stats) {
+  _emitStats(List<StatsEntity> stats) {
     final days = stats.map((s) => s.date).toList();
 
     emit(
@@ -87,8 +88,8 @@ class StatisticsCubit extends Cubit<StatisticsState> {
   }
 
   void addScore(Score score) {
-    final newTodayStats = score.cards.fold<Stats>(
-      Stats(DateTime.now(), {}),
+    final newTodayStats = score.cards.fold<StatsEntity>(
+      StatsEntity(DateTime.now(), {}),
       (previousValue, element) {
         previousValue.states.putIfAbsent(element.state, () => 0);
         previousValue.states.update(element.state, (value) => value + 1);
@@ -104,7 +105,7 @@ class StatisticsCubit extends Cubit<StatisticsState> {
       // final uniqueKeys = Set()
       //   ..addAll([...prevTodayStats.states.keys, ...newTodayStats.states.keys]);
 
-      final mergedTodayStats = new Stats(newTodayStats.date, {});
+      final mergedTodayStats = StatsEntity(newTodayStats.date, {});
 
       prevTodayStats.states.forEach((key, value) {
         mergedTodayStats.states.putIfAbsent(key, () => 0);
@@ -168,16 +169,18 @@ int computeCurrentChain(List<DateTime> days) {
   return 1;
 }
 
-List<Stats> getLastStatsDays(List<Stats> stats, int n) {
+List<StatsEntity> getLastStatsDays(List<StatsEntity> stats, int n) {
   final lastNDays = List.generate(
-      n, (index) => DateTime.now().subtract(Duration(days: index)));
+    n,
+    (index) => DateTime.now().subtract(Duration(days: index)),
+  );
 
   return lastNDays.map((day) {
     try {
       return stats
           .firstWhere((element) => dateInDays(element.date) == dateInDays(day));
     } catch (e) {
-      return Stats(day, {});
+      return StatsEntity(day, {});
     }
   }).toList();
 }
@@ -191,15 +194,7 @@ List<ChainDay> computeLast6Days(List<DateTime> days) {
     DateTime.now().subtract(const Duration(days: 1)),
     DateTime.now().subtract(const Duration(days: 0)),
   ];
-  final weekDayString = [
-    "M",
-    "T",
-    "W",
-    "T",
-    "F",
-    "S",
-    "S",
-  ];
+  final weekDayString = ["M", "T", "W", "T", "F", "S", "S"];
   return last7Days
       .map((date) => ChainDay(
             weekDayString[date.weekday - 1],

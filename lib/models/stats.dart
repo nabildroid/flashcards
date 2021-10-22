@@ -1,21 +1,30 @@
-import 'package:flashcards/models/memorization.dart';
+import 'package:flashcards/entities.dart/stats.dart';
 
-class Stats {
-  final DateTime date;
-  final Map<MemorizationState, int> states;
+import 'memorization.dart';
 
-  Stats(this.date, this.states);
+class Stats extends StatsEntity {
+  Stats({
+    required DateTime date,
+    required Map<MemorizationState, int> states,
+  }) : super(
+          date,
+          states,
+        );
+
+  Stats.generate(DateTime date, Map<MemorizationState, int> states)
+      : super(date, states);
 
   factory Stats.fromJson(Map json) {
     final jsonStats = json["states"] as Map<String, dynamic>;
     final Map<MemorizationState, int> stats = {};
 
     jsonStats.forEach((key, val) {
-      stats.putIfAbsent(MemorizationState.values[int.parse(key)], () => val);
+      stats.putIfAbsent(
+          MemorizationState.values[int.parse(key) - 1], () => val);
     });
     return Stats(
-      DateTime.parse(json["date"]),
-      stats,
+      date: DateTime.parse(json["updated"]),
+      states: stats,
     );
   }
 }
