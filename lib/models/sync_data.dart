@@ -1,3 +1,4 @@
+import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/stats.dart';
@@ -31,5 +32,9 @@ class SyncData {
           .map((j) => Stats.fromJson(j))
           .toList(),
     );
+  }
+
+  CachedSyncDates dates() {
+    return CachedSyncDates();
   }
 }

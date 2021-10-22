@@ -1,3 +1,4 @@
+import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/score.dart';
@@ -11,9 +12,8 @@ class LocalRepository extends Provider {
   LocalRepository(this._db);
 
   @override
-  Future<List<Stats>> getStats() {
-    _db.getStats();
-    throw UnimplementedError();
+  Future<List<StatsEntity>> getStats() async {
+    return _db.getStats();
   }
 
   @override
@@ -37,5 +37,10 @@ class LocalRepository extends Provider {
   Future<List<Progress>> getProgress() {
     _db.getProgress();
     throw UnimplementedError();
+  }
+
+  @override
+  dispose() {
+    _db.dispose();
   }
 }

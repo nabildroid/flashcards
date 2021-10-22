@@ -1,7 +1,19 @@
+import 'package:hive/hive.dart';
+
+part 'cart.g.dart';
+
+@HiveType(typeId: 1)
 class Cart {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String term;
+
+  @HiveField(2)
   final String definition;
+
+  @HiveField(3)
   final List<String> tags;
 
   Cart({

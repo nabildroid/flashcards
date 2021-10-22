@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
+import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/score.dart';
@@ -32,19 +33,13 @@ class ReposityFactory extends Provider {
   }
 
   @override
-  Future<List<Stats>> getStats() async {
-    await isOnline;
-
-    // TODO: implement getStats
-    throw UnimplementedError();
+  Future<List<StatsEntity>> getStats() async {
+    return _local.getStats();
   }
 
   @override
   Future<void> submitScore(Score score) async {
     await isOnline;
-
-    // TODO: implement submitScore
-    throw UnimplementedError();
   }
 
   @override
@@ -59,5 +54,10 @@ class ReposityFactory extends Provider {
 
   void hookSync(SyncCubit sync) {
     _sync = sync;
+  }
+
+  @override
+  dispose() {
+    _local.dispose();
   }
 }

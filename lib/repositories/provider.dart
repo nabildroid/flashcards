@@ -1,3 +1,4 @@
+import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/progress.dart';
@@ -9,7 +10,7 @@ abstract class Provider {
   Future<List<Progress>> getProgress() async => [];
   Future<List<Cart>> getCardsByIds(List<String> ids) async => [];
 
-  Future<List<Stats>> getStats() async => [];
+  Future<List<StatsEntity>> getStats() async => [];
 
   Future<void> submitScore(Score score);
 

@@ -1,18 +1,24 @@
 import 'package:flashcards/entities.dart/stats.dart';
+import 'package:hive/hive.dart';
 
 import 'memorization.dart';
 
 class Stats extends StatsEntity {
+  @override
+  final DateTime date;
+
+  @override
+  final Map<MemorizationState, int> states;
+
   Stats({
-    required DateTime date,
-    required Map<MemorizationState, int> states,
+    required this.date,
+    required this.states,
   }) : super(
           date,
           states,
         );
 
-  Stats.generate(DateTime date, Map<MemorizationState, int> states)
-      : super(date, states);
+  Stats.generate(this.date, this.states) : super(date, states);
 
   factory Stats.fromJson(Map json) {
     final jsonStats = json["states"] as Map<String, dynamic>;

@@ -22,9 +22,9 @@ class SyncCubit extends Cubit<SyncState> {
     // try {
     emit(SyncState.syncing);
     final dates = await _cache.get();
-    print(dates.toJson());
-    await _provider.getLatestUpdates(dates);
-    // todo update cachedSync
+    final updates = await _provider.getLatestUpdates(dates);
+
+    await _cache.save(updates.dates());
     emit(SyncState.synced);
     // } catch (e) {
     //   emit(SyncState.init);
