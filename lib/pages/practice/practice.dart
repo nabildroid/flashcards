@@ -9,7 +9,8 @@ import 'widgets/learning_feedback.dart';
 import 'widgets/practicing_area.dart';
 
 class Practice extends StatefulWidget {
-  const Practice({Key? key}) : super(key: key);
+  final PracticeMode mode;
+  const Practice(this.mode, {Key? key}) : super(key: key);
 
   @override
   _PracticeState createState() => _PracticeState();
@@ -21,7 +22,7 @@ class _PracticeState extends State<Practice> {
   @override
   initState() {
     _pageController = PageController();
-    context.read<PracticeCubit>().fetch();
+    context.read<PracticeCubit>().fetch(widget.mode);
     super.initState();
   }
 

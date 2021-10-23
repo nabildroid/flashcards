@@ -29,20 +29,33 @@ class Database {
   }
   // todo add CRUD for each table. because this is a general database service
 
-  List<Progress> getProgress() {
+  // progress
+  List<Progress> getProgress([List<String> keys = const []]) {
     return _tables.progress.values.toList();
   }
 
+  deleteProgress() {}
   setProgress(Progress progress) {}
 
+  addProgress() {}
+
+  // stats
+  setStats() {}
   addStats(StatsEntity stats) {
     _tables.stats.add(stats);
   }
 
-  List<StatsEntity> getStats() {
+  List<StatsEntity> getStats([List<String> keys = const []]) {
     return _tables.stats.values.toList();
   }
 
+  deleteStats() {}
+
+  // card
+  getCards(List<String> keys) {}
+  deleteCard() {}
+  setCard() {}
+  addCard() {}
   List<Cart> getCardsByIds(List<String> ids) {
     final carts = ids.map((id) => _tables.cards.get(id));
     return carts.where((element) => element != null) as List<Cart>;

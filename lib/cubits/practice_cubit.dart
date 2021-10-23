@@ -77,6 +77,7 @@ class PracticeCubit extends Cubit<PracticeState> {
   PracticeCubit(this._repository) : super(PracticeState.init());
 
   void addFeedback(MemorizationState feedback) async {
+    // todo refactor this
     final practice = state.toPractice[state.index];
 
     final memorized = CardMemorization(
@@ -175,10 +176,6 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   Future<bool> toggleBoosted(bool boosted) async {
     // todo implement this!
-    // if (state.status != PracticeStatus.saving) {
-    //   final card = state.toPractice[state.index];
-    //   await _repository.updateSpecialCard(card.id, boosted);
-    // }
     return boosted;
   }
 
@@ -187,6 +184,7 @@ class PracticeCubit extends Cubit<PracticeState> {
       if (state.status == PracticeStatus.saving) {
         timer.cancel();
       } else {
+        // todo refactor this
         final now = DateTime.now();
         final diff = state.startTime.difference(now).abs();
         const sessionDuration = 60 * 5;

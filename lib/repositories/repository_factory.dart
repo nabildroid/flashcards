@@ -37,22 +37,16 @@ class ReposityFactory extends Provider {
   }
 
   @override
-  Future<void> submitScore(Score score) async {
-    await isOnline;
-  }
-
-  @override
-  Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
-    return _remote.getLatestUpdates(dates);
-  }
-
-  @override
-  Future<void> updateSpecialCard(String id, bool boosted) async {
-    print(await isOnline);
-  }
+  Future<void> submitScore(Score score) async {}
 
   void hookSync(SyncCubit sync) {
     _sync = sync;
+  }
+
+  Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
+    if (!_isOnline) return SyncData(cards: [], progress: [], statistics: []);
+
+    return _remote.getLatestUpdates(dates);
   }
 
   @override

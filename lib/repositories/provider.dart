@@ -14,13 +14,5 @@ abstract class Provider {
 
   Future<void> submitScore(Score score);
 
-  Future<void> updateSpecialCard(String id, bool boosted);
-
-  Future<SyncData> getLatestUpdates(CachedSyncDates dates) {
-    return Future.value(
-      SyncData(cards: [], progress: [], statistics: []),
-    );
-  }
-
   dispose() {}
 }

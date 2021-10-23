@@ -67,6 +67,7 @@ class StatisticsCubit extends Cubit<StatisticsState> {
     print("created!");
   }
 
+  // is been called after the syncing settels
   void fetch() async {
     final stats = await _provider.getStats();
 
@@ -105,6 +106,8 @@ class StatisticsCubit extends Cubit<StatisticsState> {
       // final uniqueKeys = Set()
       //   ..addAll([...prevTodayStats.states.keys, ...newTodayStats.states.keys]);
 
+      // todo refactoring
+      // create a generic function that merges all stats by date
       final mergedTodayStats = StatsEntity(newTodayStats.date, {});
 
       prevTodayStats.states.forEach((key, value) {
