@@ -5,7 +5,7 @@ class CachedSyncDates {
   final DateTime? statistics;
   final DateTime? context;
   final DateTime? deleted;
-  final bool? fromLocal; // todo two way synchronization
+  final bool? fromLocal; // BUG two way synchronization
 
   CachedSyncDates({
     this.cards,

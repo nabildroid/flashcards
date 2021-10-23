@@ -95,7 +95,6 @@ class _FlashcardFrontState extends State<FlashcardFront> {
   @override
   void initState() {
     favorit = widget.favorit;
-    // TODO: implement initState
     super.initState();
   }
 

@@ -17,8 +17,6 @@ class CacheSync {
 
   save(CachedSyncDates dates) async {
     final toStore = (await get()).merge(dates).toJson();
-
-    // todo merge the new one with the old one
     await _instance.setString(key, jsonEncode(toStore));
   }
 
