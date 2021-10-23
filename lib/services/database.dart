@@ -91,8 +91,9 @@ class Database {
     if (keys.isEmpty) {
       return _tables.cards.values.toList();
     } else {
-      final items = keys.map((key) => _tables.cards.get(key));
-      return items.where((element) => element != null) as List<Cart>;
+      final items = keys.map((key) => _tables.cards.get(key)).toList();
+      items.removeWhere((element) => element == null);
+      return items.map((e) => e!).toList();
     }
   }
 

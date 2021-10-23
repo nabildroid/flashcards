@@ -44,6 +44,11 @@ class ReposityFactory extends Provider {
   }
 
   @override
+  Future<List<Cart>> getCardsByIds(List<String> ids) async {
+    return _local.getCardsByIds(ids);
+  }
+
+  @override
   Future<void> submitScore(Score score) async {
     _local.submitScore(score);
 
