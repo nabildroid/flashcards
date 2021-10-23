@@ -29,15 +29,17 @@ class Database {
     Hive.registerAdapter(StatsEntityAdapter());
     Hive.registerAdapter(MemorizationStateAdapter());
 
-    // await Hive.deleteBoxFromDisk("cards");
-    // await Hive.deleteBoxFromDisk("progress");
-    // await Hive.deleteBoxFromDisk("stats");
-
     _tables = _Tables(
       cards: await Hive.openBox("cards"),
       progress: await Hive.openBox("progress"),
       stats: await Hive.openBox("stats"),
     );
+  }
+
+  static Future<void> resetDatabase() async {
+    await Hive.deleteBoxFromDisk("cards");
+    await Hive.deleteBoxFromDisk("progress");
+    await Hive.deleteBoxFromDisk("stats");
   }
 
   // progress
