@@ -22,32 +22,32 @@ class App extends StatelessWidget {
       _localRepo,
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
-      theme: ThemeData(
-        textTheme: GoogleFonts.robotoTextTheme(),
-        canvasColor: Color(0xFF6A8EAE),
-      ),
-      home: RepositoryProvider.value(
-        value: _repo,
-        child: BlocProvider(
-          create: (ctx) => SyncCubit(_repo, CacheSync()),
-          lazy: false,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (ctx) => StatisticsCubit(
-                  _repo,
-                ),
+    return RepositoryProvider.value(
+      value: _repo,
+      child: BlocProvider(
+        create: (ctx) => SyncCubit(_repo, CacheSync()),
+        lazy: false,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (ctx) => StatisticsCubit(
+                _repo,
               ),
-              BlocProvider(
-                create: (ctx) => PracticeCubit(
-                  _repo,
-                ),
+            ),
+            BlocProvider(
+              create: (ctx) => PracticeCubit(
+                _repo,
               ),
-            ],
-            child: HomeScreen(),
+            ),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.dark,
+            theme: ThemeData(
+              textTheme: GoogleFonts.robotoTextTheme(),
+              canvasColor: Color(0xFF6A8EAE),
+            ),
+            home: HomeScreen(),
           ),
         ),
       ),

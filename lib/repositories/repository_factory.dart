@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cached_sync_dates.dart';
+import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/cart.dart';
@@ -30,6 +31,11 @@ class ReposityFactory extends Provider {
     Connectivity().onConnectivityChanged.listen((value) {
       _isOnline = value != ConnectivityResult.none;
     });
+  }
+
+  @override
+  Future<List<Progress>> getProgress() async {
+    return _local.getProgress();
   }
 
   @override

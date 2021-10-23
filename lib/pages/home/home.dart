@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BlocBuilder<SyncCubit, SyncState>(
           builder: (context, state) {
             return IgnorePointer(
-              ignoring: !(state == SyncState.init),
+              ignoring: state != SyncState.synced,
               child: const CustomBottomNavigationBar(),
             );
           },
