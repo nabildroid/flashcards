@@ -1,5 +1,7 @@
+import 'package:flashcards/entities.dart/progress.dart';
 import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -21,44 +23,82 @@ class Database {
 
   static Future<void> init() async {
     await Hive.initFlutter();
+    Hive.registerAdapter(CartAdapter());
+    Hive.registerAdapter(ProgressAdapter());
+    Hive.registerAdapter(StatsEntityAdapter());
+    Hive.registerAdapter(MemorizationStateAdapter());
+
     _tables = _Tables(
       cards: await Hive.openBox("cards"),
       progress: await Hive.openBox("progress"),
       stats: await Hive.openBox("stats"),
     );
   }
-  // todo add CRUD for each table. because this is a general database service
 
   // progress
   List<Progress> getProgress([List<String> keys = const []]) {
-    return _tables.progress.values.toList();
+    if (keys.isEmpty) {
+      return _tables.progress.values.toList();
+    } else {
+      final items = keys.map((key) => _tables.progress.get(key));
+      return items.where((element) => element != null) as List<Progress>;
+    }
   }
 
-  deleteProgress() {}
-  setProgress(Progress progress) {}
+  deleteProgress(String key) {
+    _tables.progress.delete(key);
+  }
 
-  addProgress() {}
+  setProgress(String key, Progress progress) {
+    addProgress(key, progress);
+  }
+
+  addProgress(String key, Progress progress) {
+    _tables.progress.put(key, progress);
+  }
 
   // stats
-  setStats() {}
+  setStats() {
+    UnimplementedError("you can't update a stats !");
+  }
+
   addStats(StatsEntity stats) {
     _tables.stats.add(stats);
   }
 
   List<StatsEntity> getStats([List<String> keys = const []]) {
-    return _tables.stats.values.toList();
+    if (keys.isEmpty) {
+      return _tables.stats.values.toList();
+    } else {
+      final items = keys.map((key) => _tables.stats.get(key));
+      return items.where((element) => element != null) as List<StatsEntity>;
+    }
   }
 
-  deleteStats() {}
+  deleteStats(String key) {
+    _tables.stats.delete(key);
+  }
 
   // card
-  getCards(List<String> keys) {}
-  deleteCard() {}
-  setCard() {}
-  addCard() {}
-  List<Cart> getCardsByIds(List<String> ids) {
-    final carts = ids.map((id) => _tables.cards.get(id));
-    return carts.where((element) => element != null) as List<Cart>;
+  List<Cart> getCards([List<String> keys = const []]) {
+    if (keys.isEmpty) {
+      return _tables.cards.values.toList();
+    } else {
+      final items = keys.map((key) => _tables.cards.get(key));
+      return items.where((element) => element != null) as List<Cart>;
+    }
+  }
+
+  deleteCard(String key) {
+    _tables.stats.delete(key);
+  }
+
+  setCard(String key, Cart cart) {
+    return addCard(key, cart);
+  }
+
+  addCard(String key, Cart cart) {
+    _tables.cards.put(key, cart);
   }
 
   dispose() {
