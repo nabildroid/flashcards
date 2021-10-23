@@ -55,6 +55,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             icon: Icons.quiz_outlined,
             label: "Practice",
             autoFocus: true,
+            hero: "practice",
           ),
         ],
       ),
@@ -67,17 +68,19 @@ class Button extends StatelessWidget {
   final String label;
   final void Function() onPressed;
   final bool autoFocus;
+  final String? hero;
   const Button({
     Key? key,
     required this.icon,
     required this.label,
     required this.onPressed,
     this.autoFocus = false,
+    this.hero,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
+    final button = TextButton.icon(
       autofocus: autoFocus,
       onPressed: onPressed,
       label: Text(label),
@@ -86,5 +89,10 @@ class Button extends StatelessWidget {
         primary: Colors.indigo,
       ),
     );
+    if (hero != null) {
+      return Hero(tag: hero!, child: button);
+    } else {
+      return button;
+    }
   }
 }

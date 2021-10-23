@@ -23,6 +23,7 @@ class _PracticeState extends State<Practice> {
   initState() {
     _pageController = PageController();
     context.read<PracticeCubit>().fetch(widget.mode);
+
     super.initState();
   }
 
@@ -32,32 +33,36 @@ class _PracticeState extends State<Practice> {
       body: SizedBox.expand(
         child: Column(
           children: [
-            const StatusBar(),
+            StatusBar(),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                child: Center(
-                  child: PracticingArea(pageController: _pageController),
+              child: RepaintBoundary(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  child: Center(
+                    child: PracticingArea(pageController: _pageController),
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(18).copyWith(
-                top: 0,
-              ),
-              child: BlocBuilder<PracticeCubit, PracticeState>(
+            RepaintBoundary(
+              child: Padding(
+                padding: const EdgeInsets.all(18).copyWith(
+                  top: 0,
+                ),
+                child: BlocBuilder<PracticeCubit, PracticeState>(
                     buildWhen: (p, n) => p.status.index != n.status.index,
-                  builder: (context, state) {
-                    final addFeedback =
-                        context.read<PracticeCubit>().addFeedback;
+                    builder: (context, state) {
+                      final addFeedback =
+                          context.read<PracticeCubit>().addFeedback;
 
-                    return LearningFeedback(
-                      enabled: state.status == PracticeStatus.practicing,
-                      easy: () => addFeedback(MemorizationState.easy),
-                      hard: () => addFeedback(MemorizationState.forget),
-                      good: () => addFeedback(MemorizationState.good),
-                    );
-                  }),
+                      return LearningFeedback(
+                        enabled: state.status == PracticeStatus.practicing,
+                        easy: () => addFeedback(MemorizationState.easy),
+                        hard: () => addFeedback(MemorizationState.forget),
+                        good: () => addFeedback(MemorizationState.good),
+                      );
+                    }),
+              ),
             ),
           ],
         ),
