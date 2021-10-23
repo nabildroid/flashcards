@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/scheduler.dart';
+import 'package:flashcards/core/utils.dart';
 import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/practice_cart.dart';
 import 'package:flashcards/models/progress.dart';
@@ -77,9 +78,7 @@ class PracticeCubit extends Cubit<PracticeState> {
   PracticeCubit(this._repository) : super(PracticeState.init());
 
   void addFeedback(MemorizationState feedback) async {
-    // todo refactor this
     final practice = state.toPractice[state.index];
-
     final memorized = CardMemorization(
       id: practice.cart.id,
       state: feedback,
@@ -88,11 +87,12 @@ class PracticeCubit extends Cubit<PracticeState> {
     );
 
     emit(state.copyWith(reviewed: [...state.reviewed, memorized]));
+
     if (state.index == state.toPractice.length) {
       emit(state.copyWith(status: PracticeStatus.saving));
       await _submit();
     } else {
-      _resumeLearning();
+      _pausePracticingForMoment();
     }
   }
 
@@ -124,12 +124,14 @@ class PracticeCubit extends Cubit<PracticeState> {
       toPractice: selected,
     ));
 
-    _resumeLearning();
+    _pausePracticingForMoment();
     _startTimer();
   }
 
   Future<List<PracticeCart>> _fetchPracticeCards(
-      int limit, PracticeMode mode) async {
+    int limit,
+    PracticeMode mode,
+  ) async {
     final prevProgress = await _repository.getProgress();
     _scheduler.init(prevProgress);
 
@@ -142,56 +144,47 @@ class PracticeCubit extends Cubit<PracticeState> {
     final carts = await _repository.getCardsByIds(cartIds);
 
     final practiceCards = carts
-        .map(
-          (cart) => PracticeCart(
-            cart,
-            chosen.firstWhere((e) => e.id == cart.id),
-          ),
-        )
+        .map((cart) => PracticeCart(
+              cart,
+              chosen.firstWhere((e) => e.id == cart.id),
+            ))
         .toList();
 
     return practiceCards;
   }
 
-  void _resumeLearning() {
+  void _pausePracticingForMoment() async {
     emit(state.copyWith(status: PracticeStatus.paused));
-    // todo pause time should depend on previous card difficulty
-    final time = Duration(seconds: 5);
 
-    Future.delayed(time).then((_) {
-      if (state.status == PracticeStatus.paused) {
-        emit(state.copyWith(
-          status: PracticeStatus.practicing,
-        ));
-      }
-    });
+    final duration = _pausingTimeBasedOnPrevSession();
+    await Future.delayed(duration);
+
+    emit(state.copyWith(status: PracticeStatus.practicing));
+  }
+
+  Duration _pausingTimeBasedOnPrevSession() {
+    // todo pause time should depend on previous card difficulty
+    int s = 5;
+    return Duration(seconds: s);
   }
 
   Future<bool> toggleBoosted(bool boosted) async {
-    // todo implement this!
+    // BUG implement this!
     return boosted;
   }
 
   void _startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (state.status == PracticeStatus.finished ||
-          state.status == PracticeStatus.saving) {
-        timer.cancel();
-      } else {
-        // todo refactor this
-        final now = DateTime.now();
-        final diff = state.startTime.difference(now).abs();
-        const sessionDuration = 60 * 5;
-        final seconds = (sessionDuration - diff.inSeconds).abs();
-        final s = (seconds < sessionDuration ? seconds : 0) % 60;
-        final m = ((seconds < sessionDuration ? seconds : 0) / 60).floor();
+      final isSessionFinished = state.status == PracticeStatus.finished ||
+          state.status == PracticeStatus.saving;
 
-        final str = (m > 9 ? m.toString() : "0" + m.toString()) +
-            ":" +
-            (s > 9 ? s.toString() : "0" + s.toString());
-
-        emit(state.copyWith(learningTime: str));
+      if (isSessionFinished) {
+        return timer.cancel();
       }
+
+      emit(state.copyWith(
+        learningTime: minutesHoursFrom(state.startTime),
+      ));
     });
   }
 }
