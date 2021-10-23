@@ -18,6 +18,7 @@ class ProgressAdapter extends TypeAdapter<Progress> {
     };
     return Progress(
       fields[0] as String,
+      updated: fields[4] as DateTime,
       ease: fields[2] as double,
       interval: fields[1] as int,
       repetitions: fields[3] as int,
@@ -27,9 +28,11 @@ class ProgressAdapter extends TypeAdapter<Progress> {
   @override
   void write(BinaryWriter writer, Progress obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
+      ..writeByte(4)
+      ..write(obj.updated)
       ..writeByte(1)
       ..write(obj.interval)
       ..writeByte(2)

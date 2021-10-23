@@ -18,6 +18,7 @@ class CartAdapter extends TypeAdapter<Cart> {
     };
     return Cart(
       id: fields[0] as String,
+      updated: fields[4] as DateTime,
       term: fields[1] as String,
       definition: fields[2] as String,
       tags: (fields[3] as List).cast<String>(),
@@ -27,7 +28,7 @@ class CartAdapter extends TypeAdapter<Cart> {
   @override
   void write(BinaryWriter writer, Cart obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class CartAdapter extends TypeAdapter<Cart> {
       ..writeByte(2)
       ..write(obj.definition)
       ..writeByte(3)
-      ..write(obj.tags);
+      ..write(obj.tags)
+      ..writeByte(4)
+      ..write(obj.updated);
   }
 
   @override

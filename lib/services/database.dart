@@ -23,10 +23,15 @@ class Database {
 
   static Future<void> init() async {
     await Hive.initFlutter();
+
     Hive.registerAdapter(CartAdapter());
     Hive.registerAdapter(ProgressAdapter());
     Hive.registerAdapter(StatsEntityAdapter());
     Hive.registerAdapter(MemorizationStateAdapter());
+
+    // await Hive.deleteBoxFromDisk("cards");
+    // await Hive.deleteBoxFromDisk("progress");
+    // await Hive.deleteBoxFromDisk("stats");
 
     _tables = _Tables(
       cards: await Hive.openBox("cards"),

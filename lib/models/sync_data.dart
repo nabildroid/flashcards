@@ -35,6 +35,22 @@ class SyncData {
   }
 
   CachedSyncDates dates() {
-    return CachedSyncDates();
+    return CachedSyncDates(
+      cards: cards.isEmpty
+          ? null
+          : cards.fold(DateTime(199), (p, element) {
+              return p!.compareTo(element.updated) > 0 ? p : element.updated;
+            }),
+      progress: progress.isEmpty
+          ? null
+          : progress.fold(DateTime(199), (p, element) {
+              return p!.compareTo(element.updated) > 0 ? p : element.updated;
+            }),
+      statistics: statistics.isEmpty
+          ? null
+          : statistics.fold(DateTime(199), (p, element) {
+              return p!.compareTo(element.date) > 0 ? p : element.date;
+            }),
+    );
   }
 }

@@ -19,11 +19,11 @@ class CacheSync {
     final toStore = (await get()).merge(dates).toJson();
 
     // todo merge the new one with the old one
-    await (await _instance).setString(key, jsonEncode(toStore));
+    await _instance.setString(key, jsonEncode(toStore));
   }
 
   Future<CachedSyncDates> get() async {
-    final stored = (await _instance).getString(key) ?? "{}";
+    final stored = _instance.getString(key) ?? "{}";
     return CachedSyncDates.fromJson(jsonDecode(stored));
   }
 }

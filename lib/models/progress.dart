@@ -7,6 +7,8 @@ part 'progress.g.dart';
 class Progress extends ProgressEntity {
   @HiveField(0)
   final String id;
+  @HiveField(4)
+  final DateTime updated;
 
   @override
   @HiveField(1)
@@ -20,6 +22,7 @@ class Progress extends ProgressEntity {
 
   Progress(
     this.id, {
+    required this.updated,
     required this.ease,
     required this.interval,
     required this.repetitions,
@@ -28,6 +31,7 @@ class Progress extends ProgressEntity {
   factory Progress.fromJson(Map json) {
     return Progress(
       json["flashcardId"],
+      updated: DateTime.parse(json["updated"]),
       ease: double.parse(json["ease"].toString()),
       interval: json["interval"],
       repetitions: json["repetitions"],

@@ -16,8 +16,12 @@ class Cart {
   @HiveField(3)
   final List<String> tags;
 
+  @HiveField(4)
+  final DateTime updated;
+
   Cart({
     required this.id,
+    required this.updated,
     required this.term,
     required this.definition,
     required this.tags,
@@ -26,6 +30,7 @@ class Cart {
   factory Cart.fromJson(Map json) {
     return Cart(
       id: json["id"],
+      updated: DateTime.parse(json["updated"]),
       definition: json["definition"],
       tags: json["tags"].cast<String>(),
       term: json["term"],
