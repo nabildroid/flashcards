@@ -17,6 +17,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    context.read<StatisticsCubit>().fetch();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<SyncCubit, SyncState>(
       listenWhen: (p, n) => n != SyncState.syncing,
