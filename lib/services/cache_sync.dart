@@ -6,10 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CacheSync {
   static const key = "cached_sync_dates";
 
-  late final Future<SharedPreferences> _instance;
+  static late SharedPreferences _instance;
 
-  CacheSync() {
-    _instance = SharedPreferences.getInstance();
+  CacheSync();
+
+  static Future<void> init() async {
+    _instance = await SharedPreferences.getInstance();
   }
 
   save(CachedSyncDates dates) async {

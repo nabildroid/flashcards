@@ -12,24 +12,23 @@ import 'local_repository.dart';
 import 'provider.dart';
 
 class ReposityFactory extends Provider {
-  late Future<bool> isOnline;
+  static late bool _isOnline;
   final RemoteRepository _remote;
   final LocalRepository _local;
   SyncCubit? _sync;
 
-  ReposityFactory(this._remote, this._local) {
-    isOnline = Connectivity().checkConnectivity().then((value) {
-      return value != ConnectivityResult.none;
+  ReposityFactory(this._remote, this._local);
+
+  static Future<void> init() async {
+    await Connectivity().checkConnectivity().then((value) {
+      _isOnline = value != ConnectivityResult.none;
     });
 
-    // todo add connectivity listener;
-  }
-
-  @override
-  Future<List<Cart>> getCards() async {
-    await isOnline;
-    // TODO: implement getCards
-    throw UnimplementedError();
+    // todo listener might work immediatly the first time
+    // todo dispose the connection
+    Connectivity().onConnectivityChanged.listen((value) {
+      _isOnline = value != ConnectivityResult.none;
+    });
   }
 
   @override

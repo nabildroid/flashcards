@@ -16,12 +16,10 @@ class _Tables {
 }
 
 class Database {
-  late _Tables _tables;
-  Database() {
-    _init();
-  }
+  static late _Tables _tables;
+  Database();
 
-  _init() async {
+  static Future<void> init() async {
     await Hive.initFlutter();
     _tables = _Tables(
       cards: await Hive.openBox("cards"),
@@ -29,7 +27,6 @@ class Database {
       stats: await Hive.openBox("stats"),
     );
   }
-
   // todo add CRUD for each table. because this is a general database service
 
   List<Progress> getProgress() {
