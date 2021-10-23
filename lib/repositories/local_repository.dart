@@ -1,8 +1,8 @@
 import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/progress.dart';
-import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/sync_data.dart';
 import 'package:flashcards/repositories/provider.dart';
 import 'package:flashcards/services/database.dart';
 
@@ -17,26 +17,33 @@ class LocalRepository extends Provider {
   }
 
   @override
-  Future<void> submitScore(Score score) {
-    throw UnimplementedError();
+  Future<void> submitScore(Score score) async {
+    final stats = score.stats();
+    _db.addStats(stats);
   }
 
   @override
-  Future<void> updateSpecialCard(String id, bool boosted) {
-    // TODO: implement updateSpecialCard
-    throw UnimplementedError();
+  Future<List<Cart>> getCardsByIds(List<String> ids) async {
+    return _db.getCards(ids);
   }
 
   @override
-  Future<List<Cart>> getCardsByIds(List<String> ids) {
-    _db.getCardsByIds(ids);
-    throw UnimplementedError();
+  Future<List<Progress>> getProgress() async {
+    return _db.getProgress();
   }
 
-  @override
-  Future<List<Progress>> getProgress() {
-    _db.getProgress();
-    throw UnimplementedError();
+  Future<void> dispatchUpdates(SyncData updates) async {
+    for (var cart in updates.cards) {
+      await _db.addCard(cart.id, cart);
+    }
+
+    for (var progress in updates.progress) {
+      await _db.addProgress(progress.id, progress);
+    }
+
+    for (var stats in updates.statistics) {
+      await _db.addStats(stats);
+    }
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/repositories/repository_factory.dart';
 import 'package:flashcards/services/cache_sync.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,11 +24,15 @@ class SyncCubit extends Cubit<SyncState> {
     emit(SyncState.syncing);
     final dates = await _cache.get();
     final updates = await _provider.getLatestUpdates(dates);
-
-    await _cache.save(updates.dates());
+    await _provider.dispatchUpdates(updates);
+    save(updates.dates());
     emit(SyncState.synced);
     // } catch (e) {
     //   emit(SyncState.init);
     // }
+  }
+
+  save(CachedSyncDates dates) async {
+    await _cache.save(dates);
   }
 }

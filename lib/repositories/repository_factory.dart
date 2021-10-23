@@ -7,6 +7,7 @@ import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/sync_data.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
+import 'package:flashcards/services/cache_sync.dart';
 
 import 'local_repository.dart';
 import 'provider.dart';
@@ -37,7 +38,15 @@ class ReposityFactory extends Provider {
   }
 
   @override
-  Future<void> submitScore(Score score) async {}
+  Future<void> submitScore(Score score) async {
+    _local.submitScore(score);
+
+    if (_isOnline) {
+      _remote.submitScore(score);
+    }
+
+    _sync?.save(CachedSyncDates(statistics: score.startTime));
+  }
 
   void hookSync(SyncCubit sync) {
     _sync = sync;
@@ -47,6 +56,10 @@ class ReposityFactory extends Provider {
     if (!_isOnline) return SyncData(cards: [], progress: [], statistics: []);
 
     return _remote.getLatestUpdates(dates);
+  }
+
+  Future<void> dispatchUpdates(SyncData updates) {
+    return _local.dispatchUpdates(updates);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'memorization.dart';
+import 'stats.dart';
 
 class Score {
   final List<CardMemorization> cards;
@@ -10,6 +11,11 @@ class Score {
     required this.startTime,
     required this.endTime,
   });
+
+  Stats stats() {
+    // todo implement this
+    return Stats(date: startTime, states: {});
+  }
 
   Map toJson() {
     return {
