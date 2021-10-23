@@ -5,6 +5,7 @@ class CachedSyncDates {
   final DateTime? statistics;
   final DateTime? context;
   final DateTime? deleted;
+  final bool? fromLocal; // todo two way synchronization
 
   CachedSyncDates({
     this.cards,
@@ -13,6 +14,7 @@ class CachedSyncDates {
     this.statistics,
     this.context,
     this.deleted,
+    this.fromLocal,
   });
 
   toJson() {
