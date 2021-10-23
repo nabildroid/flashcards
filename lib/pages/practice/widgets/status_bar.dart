@@ -32,7 +32,8 @@ class StatusBar extends StatelessWidget {
                     );
                   }),
               BlocBuilder<PracticeCubit, PracticeState>(
-                  buildWhen: (p, n) => p.learningTime != n.learningTime,
+                  buildWhen: (p, n) =>
+                      p.learningTime.toString() != n.learningTime.toString(),
                   builder: (context, state) {
                     return Timer(state.learningTime);
                   }),

@@ -46,7 +46,7 @@ class _PracticeState extends State<Practice> {
                 top: 0,
               ),
               child: BlocBuilder<PracticeCubit, PracticeState>(
-                  buildWhen: (p, n) => p.status != n.status,
+                    buildWhen: (p, n) => p.status.index != n.status.index,
                   builder: (context, state) {
                     final addFeedback =
                         context.read<PracticeCubit>().addFeedback;

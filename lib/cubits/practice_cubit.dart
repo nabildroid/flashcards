@@ -89,10 +89,11 @@ class PracticeCubit extends Cubit<PracticeState> {
 
     emit(state.copyWith(reviewed: [...state.reviewed, memorized]));
     if (state.index == state.toPractice.length) {
-      return emit(state.copyWith(status: PracticeStatus.saving));
+      emit(state.copyWith(status: PracticeStatus.saving));
+      await _submit();
+    } else {
+      _resumeLearning();
     }
-
-    _resumeLearning();
   }
 
   Future<void> _submit() async {
@@ -113,16 +114,8 @@ class PracticeCubit extends Cubit<PracticeState> {
     );
   }
 
-  @override
-  void onChange(Change<PracticeState> change) async {
-    if (change.nextState.status == PracticeStatus.saving) {
-      await _submit();
-    }
-
-    super.onChange(change);
-  }
-
   void fetch(PracticeMode mode) async {
+    emit(PracticeState.init());
     emit(state.copyWith(status: PracticeStatus.loading));
 
     final selected = await _fetchPracticeCards(10, mode);
@@ -181,7 +174,8 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   void _startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (state.status == PracticeStatus.saving) {
+      if (state.status == PracticeStatus.finished ||
+          state.status == PracticeStatus.saving) {
         timer.cancel();
       } else {
         // todo refactor this
