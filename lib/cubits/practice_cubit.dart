@@ -121,12 +121,12 @@ class PracticeCubit extends Cubit<PracticeState> {
     super.onChange(change);
   }
 
-  void fetch() async {
+  void fetch(PracticeMode mode) async {
     emit(state.copyWith(status: PracticeStatus.loading));
 
-    final selected = await _fetchPracticeCards(10, PracticeMode.learning);
+    final selected = await _fetchPracticeCards(10, mode);
 
-    emit(state.copyWith(
+    emit(PracticeState.init().copyWith(
       toPractice: selected,
     ));
 

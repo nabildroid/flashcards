@@ -44,7 +44,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               final score = await Navigator.push<Score>(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) => Practice(),
+                  builder: (ctx) => const Practice(PracticeMode.learning),
                 ),
               );
 
