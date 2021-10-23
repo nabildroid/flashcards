@@ -70,8 +70,8 @@ class StatisticsCubit extends Cubit<StatisticsState> {
   // is been called after the syncing settels
   void fetch() async {
     final stats = await _provider.getStats();
-
-    _emitStats(stats);
+    final uniqueDatesStats = combineStatsDates(stats);
+    _emitStats(uniqueDatesStats);
   }
 
   _emitStats(List<StatsEntity> stats) {
@@ -89,46 +89,38 @@ class StatisticsCubit extends Cubit<StatisticsState> {
   }
 
   void addScore(Score score) {
-    final newTodayStats = score.cards.fold<StatsEntity>(
-      StatsEntity(DateTime.now(), {}),
-      (previousValue, element) {
-        previousValue.states.putIfAbsent(element.state, () => 0);
-        previousValue.states.update(element.state, (value) => value + 1);
-
-        return previousValue;
-      },
-    );
+    final newTodayStats = score.stats();
 
     try {
       final prevTodayStats = state.allStats.firstWhere((element) =>
           dateInDays(element.date) == dateInDays(newTodayStats.date));
 
-      // final uniqueKeys = Set()
-      //   ..addAll([...prevTodayStats.states.keys, ...newTodayStats.states.keys]);
+      final mergedTodayStats = prevTodayStats.mergeWith(newTodayStats);
 
-      // todo refactoring
-      // create a generic function that merges all stats by date
-      final mergedTodayStats = StatsEntity(newTodayStats.date, {});
+      state.allStats.removeWhere(
+        (element) =>
+            dateInDays(element.date) == dateInDays(mergedTodayStats.date),
+      );
 
-      prevTodayStats.states.forEach((key, value) {
-        mergedTodayStats.states.putIfAbsent(key, () => 0);
-        mergedTodayStats.states.update(key, (v) => v + value);
-      });
-
-      newTodayStats.states.forEach((key, value) {
-        mergedTodayStats.states.putIfAbsent(key, () => 0);
-        mergedTodayStats.states.update(key, (v) => v + value);
-      });
-
-      _emitStats([
-        ...state.allStats.where((element) =>
-            dateInDays(element.date) != dateInDays(mergedTodayStats.date)),
-        mergedTodayStats,
-      ]);
+      _emitStats([...state.allStats, mergedTodayStats]);
     } catch (e) {
       _emitStats([...state.allStats, newTodayStats]);
     }
   }
+}
+
+List<StatsEntity> combineStatsDates(List<StatsEntity> stats) {
+  Map<int, StatsEntity> combined = {};
+
+  for (var item in stats) {
+    final key = dateInDays(item.date);
+
+    if (combined.containsKey(key)) {
+      combined.update(key, (value) => value.mergeWith(item));
+    }
+    combined.putIfAbsent(key, () => item);
+  }
+  return combined.values.toList();
 }
 
 int computeLongestChain(List<DateTime> days) {

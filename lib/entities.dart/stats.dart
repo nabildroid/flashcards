@@ -12,4 +12,20 @@ class StatsEntity {
   final Map<MemorizationState, int> states;
 
   StatsEntity(this.date, this.states);
+
+  StatsEntity mergeWith(StatsEntity merge) {
+    final result = StatsEntity(merge.date, {});
+
+    states.forEach((key, value) {
+      result.states.putIfAbsent(key, () => 0);
+      result.states.update(key, (v) => v + value);
+    });
+
+    merge.states.forEach((key, value) {
+      result.states.putIfAbsent(key, () => 0);
+      result.states.update(key, (v) => v + value);
+    });
+
+    return result;
+  }
 }

@@ -13,8 +13,17 @@ class Score {
   });
 
   Stats stats() {
-    // todo implement this
-    return Stats(date: startTime, states: {});
+    final stats = Stats(
+      date: startTime,
+      states: {},
+    );
+
+    for (var card in cards) {
+      stats.states.putIfAbsent(card.state, () => 0);
+      stats.states.update(card.state, (v) => v + 1);
+    }
+
+    return stats;
   }
 
   Map toJson() {
