@@ -48,11 +48,11 @@ class Scheduler {
     return progress.map((p) => Vote(p, computeScore(p))).toList();
   }
 
-  double computeScore(ProgressEntity progress, {bool boost = false}) {
+  double computeScore(Progress progress, {bool boost = false}) {
     double total = 0.0;
     total += progress.repetitions / (progress.ease * 10);
-    // BUG interval here always start from day zero while the now,well start at 1970 :!
-    total += progress.interval - dateInDays(DateTime.now());
+    final interval = progress.interval + dateInDays(progress.updated);
+    total += interval - dateInDays(DateTime.now());
 
     if (progress.repetitions < 2) {
       total -= 10;

@@ -51,7 +51,8 @@ class ReposityFactory extends Provider {
   @override
   Future<void> submitScore(Score score) async {
     _local.submitScore(score);
-
+    // BUG update the progress
+    // get the dates from the score startTime
     if (_isOnline) {
       _remote.submitScore(score);
     }

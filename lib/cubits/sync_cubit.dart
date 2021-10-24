@@ -20,14 +20,17 @@ class SyncCubit extends Cubit<SyncState> {
   }
 
   void sync() async {
-    emit(SyncState.syncing);
-    final dates = await _cache.get();
-    final updates = await _provider.getLatestUpdates(dates);
-    await _provider.dispatchUpdates(updates);
-    save(updates.dates());
-    emit(SyncState.synced);
-
-    // BUG add catch statement
+    try {
+      emit(SyncState.syncing);
+      final dates = await _cache.get();
+      final updates = await _provider.getLatestUpdates(dates);
+      await _provider.dispatchUpdates(updates);
+      save(updates.dates());
+      emit(SyncState.synced);
+    } catch (e) {
+      print("Error");
+      emit(SyncState.init);
+    }
   }
 
   // BUG call this function in RepositoryFactory

@@ -1,16 +1,5 @@
-List<DateTime> uniqueDates(List<DateTime> dates) {
-  final s = Map<String, DateTime>();
-
-  dates.forEach((date) {
-    final str = "${date.day}-${date.month}-${date.year}";
-    s.putIfAbsent(str, () => date);
-  });
-
-  return s.values.toList();
-}
-
 int dateInDays(DateTime date) {
-  return (date.millisecondsSinceEpoch / 1000 / 60 / 24).floor();
+  return date.difference(DateTime(-1)).inDays;
 }
 
 String monthDayFromDate(DateTime date) {
