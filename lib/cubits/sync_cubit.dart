@@ -33,7 +33,6 @@ class SyncCubit extends Cubit<SyncState> {
     }
   }
 
-  // BUG call this function in RepositoryFactory
   save(CachedSyncDates dates) async {
     await _cache.save(dates);
   }
