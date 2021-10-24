@@ -20,6 +20,19 @@ class LocalRepository extends Provider {
   Future<void> submitScore(Score score) async {
     final stats = score.stats();
     _db.addStats(stats);
+
+    for (var cart in score.cards) {
+      await _db.addProgress(
+        cart.id,
+        Progress(
+          cart.id,
+          updated: score.startTime, // the same as the serve
+          ease: cart.progress.ease,
+          interval: cart.progress.interval,
+          repetitions: cart.progress.repetitions,
+        ),
+      );
+    }
   }
 
   @override
