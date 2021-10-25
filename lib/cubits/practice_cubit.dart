@@ -7,7 +7,7 @@ import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/practice_cart.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/score.dart';
-import 'package:flashcards/repositories/provider.dart';
+import 'package:flashcards/repositories/repository_factory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum PracticeStatus {
@@ -72,7 +72,7 @@ class PracticeState extends Equatable {
 }
 
 class PracticeCubit extends Cubit<PracticeState> {
-  final Provider _repository;
+  final ReposityFactory _repository;
   final _scheduler = Scheduler();
 
   PracticeCubit(this._repository) : super(PracticeState.init());
@@ -163,7 +163,7 @@ class PracticeCubit extends Cubit<PracticeState> {
   }
 
   Duration _pausingTimeBasedOnPrevSession() {
-    // todo pause time should depend on previous card difficulty
+    // BUG pause time should depend on previous card difficulty
     int s = 5;
     return Duration(seconds: s);
   }

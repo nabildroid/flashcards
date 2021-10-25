@@ -1,4 +1,4 @@
-import 'package:flashcards/entities.dart/progress.dart';
+import 'package:flashcards/entities/progress.dart';
 import 'package:hive/hive.dart';
 
 part 'progress.g.dart';

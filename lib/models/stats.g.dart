@@ -6,24 +6,24 @@ part of 'stats.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class StatsEntityAdapter extends TypeAdapter<StatsEntity> {
+class StatsAdapter extends TypeAdapter<Stats> {
   @override
   final int typeId = 4;
 
   @override
-  StatsEntity read(BinaryReader reader) {
+  Stats read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return StatsEntity(
+    return Stats(
       fields[0] as DateTime,
       (fields[1] as Map).cast<MemorizationState, int>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, StatsEntity obj) {
+  void write(BinaryWriter writer, Stats obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
@@ -38,7 +38,7 @@ class StatsEntityAdapter extends TypeAdapter<StatsEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StatsEntityAdapter &&
+      other is StatsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

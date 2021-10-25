@@ -1,18 +1,17 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
-import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/cached_sync_ids.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/sync_data.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
 
 import 'local_repository.dart';
-import 'provider.dart';
 
-class ReposityFactory extends Provider {
+class ReposityFactory {
   static late bool _isOnline;
   final RemoteRepository _remote;
   final LocalRepository _local;
@@ -32,24 +31,20 @@ class ReposityFactory extends Provider {
     });
   }
 
-  @override
   Future<List<Progress>> getProgress() async {
     return _local.getProgress();
   }
 
-  @override
-  Future<List<StatsEntity>> getStats() async {
+  Future<List<Stats>> getStats() async {
     return _local.getStats();
   }
 
-  @override
   Future<List<Cart>> getCardsByIds(List<String> ids) async {
     return _local.getCardsByIds(ids);
   }
 
-  @override
   Future<void> submitScore(Score score) async {
-    final statsId = await _local.submitScore(score);
+    final statsId = await _local.submitScoreWithProgress(score);
     var cachedLocalIds = const CachedSyncIds();
 
     if (_isOnline) {
@@ -82,8 +77,8 @@ class ReposityFactory extends Provider {
     return _local.dispatchUpdates(updates);
   }
 
-  @override
   dispose() {
     _local.dispose();
+    // todo dispose the connectivity listener
   }
 }

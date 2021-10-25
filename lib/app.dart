@@ -2,7 +2,7 @@ import 'package:flashcards/cubits/practice_cubit.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/pages/home/home.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
-import 'package:flashcards/services/cache_sync.dart';
+import 'package:flashcards/services/cache_service.dart';
 import 'package:flashcards/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +25,7 @@ class App extends StatelessWidget {
     return RepositoryProvider.value(
       value: _repo,
       child: BlocProvider(
-        create: (ctx) => SyncCubit(_repo, CacheSync()),
+        create: (ctx) => SyncCubit(_repo, CacheService()),
         lazy: false,
         child: MultiBlocProvider(
           providers: [

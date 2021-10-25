@@ -1,24 +1,35 @@
-import 'package:flashcards/entities.dart/stats.dart';
+import 'package:flashcards/models/memorization.dart';
 import 'package:hive/hive.dart';
 
-import 'memorization.dart';
+part 'stats.g.dart';
 
-class Stats extends StatsEntity {
-  @override
+@HiveType(typeId: 4)
+class Stats {
+  @HiveField(0)
   final DateTime date;
 
-  @override
+  @HiveField(1)
   final Map<MemorizationState, int> states;
 
-  Stats({
-    required this.date,
-    required this.states,
-  }) : super(
-          date,
-          states,
-        );
+  Stats(this.date, this.states);
 
-  Stats.generate(this.date, this.states) : super(date, states);
+  Stats mergeWith(Stats merge) {
+    final result = Stats(merge.date, {});
+
+    states.forEach((key, value) {
+      result.states.putIfAbsent(key, () => 0);
+      result.states.update(key, (v) => v + value);
+    });
+
+    merge.states.forEach((key, value) {
+      result.states.putIfAbsent(key, () => 0);
+      result.states.update(key, (v) => v + value);
+    });
+
+    return result;
+  }
+
+  Stats.generate(this.date, this.states);
 
   factory Stats.fromJson(Map json) {
     final jsonStats = json["states"] as Map<String, dynamic>;
@@ -28,9 +39,6 @@ class Stats extends StatsEntity {
       stats.putIfAbsent(
           MemorizationState.values[int.parse(key) - 1], () => val);
     });
-    return Stats(
-      date: DateTime.parse(json["updated"]),
-      states: stats,
-    );
+    return Stats(DateTime.parse(json["updated"]), stats);
   }
 }

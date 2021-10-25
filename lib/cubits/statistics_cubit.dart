@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/utils.dart';
-import 'package:flashcards/entities.dart/stats.dart';
-import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/stats.dart';
-import 'package:flashcards/repositories/provider.dart';
+import 'package:flashcards/repositories/repository_factory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChainDay {
@@ -18,8 +16,8 @@ class StatisticsState extends Equatable {
   final int longestChain;
   final int currentChain;
   final List<ChainDay> last7DaysStreak;
-  final List<StatsEntity> daysStats;
-  final List<StatsEntity> allStats;
+  final List<Stats> daysStats;
+  final List<Stats> allStats;
 
   StatisticsState({
     required this.longestChain,
@@ -44,8 +42,8 @@ class StatisticsState extends Equatable {
     int? longestChain,
     int? currentChain,
     List<ChainDay>? last7DaysStreak,
-    List<StatsEntity>? daysStats,
-    List<StatsEntity>? allStats,
+    List<Stats>? daysStats,
+    List<Stats>? allStats,
   }) {
     return StatisticsState(
       currentChain: currentChain ?? this.currentChain,
@@ -62,7 +60,7 @@ class StatisticsState extends Equatable {
 }
 
 class StatisticsCubit extends Cubit<StatisticsState> {
-  final Provider _provider;
+  final ReposityFactory _provider;
   StatisticsCubit(this._provider) : super(StatisticsState.init()) {
     print("created!");
   }
@@ -74,7 +72,7 @@ class StatisticsCubit extends Cubit<StatisticsState> {
     _emitStats(uniqueDatesStats);
   }
 
-  _emitStats(List<StatsEntity> stats) {
+  _emitStats(List<Stats> stats) {
     final days = stats.map((s) => s.date).toList();
 
     emit(
@@ -109,8 +107,8 @@ class StatisticsCubit extends Cubit<StatisticsState> {
   }
 }
 
-List<StatsEntity> combineStatsDates(List<StatsEntity> stats) {
-  Map<int, StatsEntity> combined = {};
+List<Stats> combineStatsDates(List<Stats> stats) {
+  Map<int, Stats> combined = {};
 
   for (var item in stats) {
     final key = dateInDays(item.date);
@@ -164,7 +162,7 @@ int computeCurrentChain(List<DateTime> days) {
   return 1;
 }
 
-List<StatsEntity> getLastStatsDays(List<StatsEntity> stats, int n) {
+List<Stats> getLastStatsDays(List<Stats> stats, int n) {
   final lastNDays = List.generate(
     n,
     (index) => DateTime.now().subtract(Duration(days: index)),
@@ -175,7 +173,7 @@ List<StatsEntity> getLastStatsDays(List<StatsEntity> stats, int n) {
       return stats
           .firstWhere((element) => dateInDays(element.date) == dateInDays(day));
     } catch (e) {
-      return StatsEntity(day, {});
+      return Stats(day, {});
     }
   }).toList();
 }

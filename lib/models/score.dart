@@ -13,10 +13,7 @@ class Score {
   });
 
   Stats stats() {
-    final stats = Stats(
-      date: startTime,
-      states: {},
-    );
+    final stats = Stats(startTime, {});
 
     for (var card in cards) {
       stats.states.putIfAbsent(card.state, () => 0);

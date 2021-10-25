@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flashcards/core/utils.dart';
-import 'package:flashcards/entities.dart/progress.dart';
+import 'package:flashcards/entities/progress.dart';
 import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/progress.dart';
 

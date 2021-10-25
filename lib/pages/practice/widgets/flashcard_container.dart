@@ -1,14 +1,14 @@
 import 'package:auto_size_text_pk/auto_size_text_pk.dart';
 import 'package:flutter/material.dart';
 
-class Flashcard extends StatefulWidget {
+class FlashcardContainer extends StatefulWidget {
   final String head;
   final String tail;
 
   final Future<bool> Function(bool favorit)? togglefavorit;
   final bool favorit;
 
-  const Flashcard({
+  const FlashcardContainer({
     Key? key,
     required this.head,
     required this.tail,
@@ -17,10 +17,10 @@ class Flashcard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Flashcard> createState() => _FlashcardState();
+  State<FlashcardContainer> createState() => _FlashcardContainerState();
 }
 
-class _FlashcardState extends State<Flashcard> {
+class _FlashcardContainerState extends State<FlashcardContainer> {
   bool flipped = false;
 
   void flip() {

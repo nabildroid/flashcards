@@ -2,19 +2,17 @@ import 'dart:convert';
 
 import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/sync_data.dart';
+// ignore: library_prefixes
 import 'package:http/http.dart' as Http;
 
 import 'package:flashcards/models/score.dart';
 
-import 'provider.dart';
-
-class RemoteRepository extends Provider {
+class RemoteRepository {
   //https://stackoverflow.com/questions/44250184/setting-environment-variables-in-flutter
   //https://github.com/nabildroid/automation
   static const endpoint = String.fromEnvironment('END_POINT',
       defaultValue: 'https://supernabil.herokuapp.com');
 
-  @override
   Future<void> submitScore(Score score) async {
     final body = {"score": score};
     final data = jsonEncode(body);

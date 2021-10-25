@@ -2,7 +2,7 @@ import 'package:flashcards/cubits/practice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'flashcard.dart';
+import 'flashcard_container.dart';
 
 class PracticingArea extends StatelessWidget {
   const PracticingArea({
@@ -42,7 +42,7 @@ class PracticingArea extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 18),
           child: Hero(
             tag: "practice",
-            child: Flashcard(
+            child: FlashcardContainer(
               head: "Flash Cards",
               tail: "Speace Repetition Application\n made by Nabil Lakrib",
             ),
@@ -57,7 +57,7 @@ class PracticingArea extends StatelessWidget {
               .map(
                 (item) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Flashcard(
+                  child: FlashcardContainer(
                     head: item.cart.term,
                     tail: item.cart.definition,
                     favorit: false, //item.cart.boosted,

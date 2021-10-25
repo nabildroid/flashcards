@@ -1,14 +1,13 @@
-import 'package:flashcards/entities.dart/progress.dart';
-import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/progress.dart';
+import 'package:flashcards/models/stats.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class _Tables {
   final Box<Cart> cards;
   final Box<Progress> progress;
-  final Box<StatsEntity> stats;
+  final Box<Stats> stats;
 
   _Tables({
     required this.cards,
@@ -26,7 +25,7 @@ class Database {
 
     Hive.registerAdapter(CartAdapter());
     Hive.registerAdapter(ProgressAdapter());
-    Hive.registerAdapter(StatsEntityAdapter());
+    Hive.registerAdapter(StatsAdapter());
     Hive.registerAdapter(MemorizationStateAdapter());
 
     _tables = _Tables(
@@ -69,16 +68,16 @@ class Database {
     UnimplementedError("you can't update a stats !");
   }
 
-  Future<int> addStats(StatsEntity stats) {
+  Future<int> addStats(Stats stats) {
     return _tables.stats.add(stats);
   }
 
-  List<StatsEntity> getStats([List<int> keys = const []]) {
+  List<Stats> getStats([List<int> keys = const []]) {
     if (keys.isEmpty) {
       return _tables.stats.values.toList();
     } else {
       final items = keys.map((key) => _tables.stats.getAt(key));
-      return items.where((element) => element != null) as List<StatsEntity>;
+      return items.where((element) => element != null) as List<Stats>;
     }
   }
 
