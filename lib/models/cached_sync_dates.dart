@@ -1,3 +1,5 @@
+import 'cached_sync_ids.dart';
+
 class CachedSyncDates {
   final DateTime? cards;
   final DateTime? progress;
@@ -5,7 +7,7 @@ class CachedSyncDates {
   final DateTime? statistics;
   final DateTime? context;
   final DateTime? deleted;
-  final bool? fromLocal; // BUG two way synchronization
+  final CachedSyncIds localUpdatedIds;
 
   CachedSyncDates({
     this.cards,
@@ -14,7 +16,7 @@ class CachedSyncDates {
     this.statistics,
     this.context,
     this.deleted,
-    this.fromLocal,
+    this.localUpdatedIds = const CachedSyncIds(),
   });
 
   toJson() {
@@ -25,6 +27,20 @@ class CachedSyncDates {
       "statistics": statistics?.toIso8601String(),
       "deleted": deleted?.toIso8601String(),
       "context": context?.toIso8601String(),
+      // "localUpdatedIds": localUpdatedIds.toJson(),
+    };
+  }
+
+  toFullJson() {
+    // todo refactor this
+    return {
+      "cards": cards?.toIso8601String(),
+      "progress": progress?.toIso8601String(),
+      "special": special?.toIso8601String(),
+      "statistics": statistics?.toIso8601String(),
+      "deleted": deleted?.toIso8601String(),
+      "context": context?.toIso8601String(),
+      "localUpdatedIds": localUpdatedIds.toJson(),
     };
   }
 
@@ -36,6 +52,7 @@ class CachedSyncDates {
       deleted: newCach.deleted ?? deleted,
       statistics: newCach.statistics ?? statistics,
       special: newCach.special ?? special,
+      localUpdatedIds: localUpdatedIds.merge(newCach.localUpdatedIds),
     );
   }
 
@@ -50,6 +67,9 @@ class CachedSyncDates {
       statistics: json["statistics"] != null
           ? DateTime.parse(json["statistics"])
           : null,
+      localUpdatedIds: json["localUpdatedIds"] != null
+          ? CachedSyncIds.fromJson(json["localUpdatedIds"])
+          : const CachedSyncIds(),
     );
   }
 }

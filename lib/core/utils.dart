@@ -34,3 +34,11 @@ String minutesHoursFrom(DateTime start) {
       (s > 9 ? s.toString() : "0" + s.toString());
   return str;
 }
+
+List<String> mergeUniquely(List<String> a, List<String> b) {
+  final s = <String>{};
+
+  s.addAll([...a, ...b]);
+
+  return s.toList();
+}

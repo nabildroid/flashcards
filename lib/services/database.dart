@@ -69,15 +69,15 @@ class Database {
     UnimplementedError("you can't update a stats !");
   }
 
-  addStats(StatsEntity stats) {
-    _tables.stats.add(stats);
+  Future<int> addStats(StatsEntity stats) {
+    return _tables.stats.add(stats);
   }
 
-  List<StatsEntity> getStats([List<String> keys = const []]) {
+  List<StatsEntity> getStats([List<int> keys = const []]) {
     if (keys.isEmpty) {
       return _tables.stats.values.toList();
     } else {
-      final items = keys.map((key) => _tables.stats.get(key));
+      final items = keys.map((key) => _tables.stats.getAt(key));
       return items.where((element) => element != null) as List<StatsEntity>;
     }
   }

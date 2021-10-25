@@ -2,13 +2,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/entities.dart/stats.dart';
 import 'package:flashcards/models/cached_sync_dates.dart';
+import 'package:flashcards/models/cached_sync_ids.dart';
 import 'package:flashcards/models/progress.dart';
-import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/sync_data.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
-import 'package:flashcards/services/cache_sync.dart';
 
 import 'local_repository.dart';
 import 'provider.dart';
@@ -50,14 +49,22 @@ class ReposityFactory extends Provider {
 
   @override
   Future<void> submitScore(Score score) async {
-    _local.submitScore(score);
+    final statsId = await _local.submitScore(score);
+    var cachedLocalIds = const CachedSyncIds();
+
     if (_isOnline) {
-      _remote.submitScore(score);
+      await _remote.submitScore(score);
+    } else {
+      cachedLocalIds = CachedSyncIds(
+        progress: score.cards.map((e) => e.id).toList(),
+        statistics: [statsId.toString()],
+      );
     }
 
     _sync?.save(CachedSyncDates(
       statistics: score.startTime,
       progress: score.startTime,
+      localUpdatedIds: cachedLocalIds,
     ));
   }
 
@@ -71,7 +78,7 @@ class ReposityFactory extends Provider {
     return _remote.getLatestUpdates(dates);
   }
 
-  Future<void> dispatchUpdates(SyncData updates) {
+  Future<void> dispatchUpdatesToLocal(SyncData updates) {
     return _local.dispatchUpdates(updates);
   }
 

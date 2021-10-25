@@ -4,9 +4,7 @@ import 'package:flashcards/models/cached_sync_dates.dart';
 import 'package:flashcards/models/sync_data.dart';
 import 'package:http/http.dart' as Http;
 
-import 'package:flashcards/models/cart.dart';
 import 'package:flashcards/models/score.dart';
-import 'package:flashcards/models/stats.dart';
 
 import 'provider.dart';
 
