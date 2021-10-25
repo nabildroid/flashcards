@@ -56,11 +56,14 @@ class ReposityFactory {
       );
     }
 
-    _sync?.save(CachedSyncDates(
-      statistics: score.startTime,
-      progress: score.startTime,
-      localUpdatedIds: cachedLocalIds,
-    ));
+    _sync?.save(
+      CachedSyncDates(
+        statistics: score.startTime,
+        progress: score.startTime,
+        localUpdatedIds: cachedLocalIds,
+      ),
+      merge: true,
+    );
   }
 
   void hookSync(SyncCubit sync) {
@@ -75,8 +78,40 @@ class ReposityFactory {
     return _remote.getLatestUpdates(dates);
   }
 
+  Future<SyncData> getFromIds(CachedSyncIds ids) async {
+    // if (false && !_isOnline) {
+    //   // todo should we return all the data anyway,
+    //   // or return it only when there is connection
+    //   // because when offline, this data is totaly useless
+    //   return SyncData(flashcards: [], progress: [], statistics: []);
+    // }
+    return SyncData(
+      flashcards: ids.flashcards != null && ids.flashcards!.isNotEmpty
+          ? await _local.getFlashcardsByIds(ids.flashcards!)
+          : [],
+      progress: ids.progress != null && ids.progress!.isNotEmpty
+          ? await _local.getProgressByIds(ids.progress!)
+          : [],
+      statistics: ids.statistics != null && ids.statistics!.isNotEmpty
+          ? await _local.getStatsByIds(
+              // converting ids from string to number
+              ids.statistics!.map((id) => int.parse(id)).toList(),
+            )
+          : [],
+    );
+  }
+
   Future<void> dispatchUpdatesToLocal(SyncData updates) {
     return _local.dispatchUpdates(updates);
+  }
+
+  Future<bool> dispatchUpdatesToServer(SyncData updates) async {
+    if (_isOnline) {
+      // BUG implement this
+      await _local.dispatchUpdates(updates);
+      return true;
+    }
+    return false;
   }
 
   dispose() {

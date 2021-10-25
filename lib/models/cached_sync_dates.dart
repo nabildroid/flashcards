@@ -44,7 +44,7 @@ class CachedSyncDates {
     };
   }
 
-  CachedSyncDates merge(CachedSyncDates newCach) {
+  CachedSyncDates merge(CachedSyncDates newCach, {bool resetIds = false}) {
     return CachedSyncDates(
       flashcards: newCach.flashcards ?? flashcards,
       context: newCach.context ?? context,
@@ -52,7 +52,9 @@ class CachedSyncDates {
       deleted: newCach.deleted ?? deleted,
       statistics: newCach.statistics ?? statistics,
       special: newCach.special ?? special,
-      localUpdatedIds: localUpdatedIds.merge(newCach.localUpdatedIds),
+      localUpdatedIds: resetIds
+          ? const CachedSyncIds()
+          : localUpdatedIds.merge(newCach.localUpdatedIds),
     );
   }
 

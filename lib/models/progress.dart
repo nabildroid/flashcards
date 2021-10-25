@@ -37,4 +37,9 @@ class Progress extends ProgressEntity {
       repetitions: json["repetitions"],
     );
   }
+
+  Progress merge(Progress b) {
+    // BUG implement this
+    return b;
+  }
 }

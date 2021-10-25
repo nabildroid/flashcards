@@ -46,8 +46,9 @@ class Database {
     if (keys.isEmpty) {
       return _tables.progress.values.toList();
     } else {
-      final items = keys.map((key) => _tables.progress.get(key));
-      return items.where((element) => element != null) as List<Progress>;
+      final items = keys.map((key) => _tables.progress.get(key)).toList();
+      items.removeWhere((element) => element == null);
+      return items.map((e) => e!).toList();
     }
   }
 
@@ -76,8 +77,9 @@ class Database {
     if (keys.isEmpty) {
       return _tables.stats.values.toList();
     } else {
-      final items = keys.map((key) => _tables.stats.getAt(key));
-      return items.where((element) => element != null) as List<Stats>;
+      final items = keys.map((key) => _tables.stats.getAt(key)).toList();
+      items.removeWhere((element) => element == null);
+      return items.map((e) => e!).toList();
     }
   }
 

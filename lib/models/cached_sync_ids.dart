@@ -17,11 +17,11 @@ class CachedSyncIds {
 
   factory CachedSyncIds.fromJson(Map json) {
     return CachedSyncIds(
-      flashcards: json["cards"].cast<String>(),
-      progress: json["progress"].cast<String>(),
-      special: json["special"].cast<String>(),
-      statistics: json["statistics"].cast<String>(),
-      context: json["context"].cast<String>(),
+      flashcards: (json["cards"] ?? []).cast<String>(),
+      progress: (json["progress"] ?? []).cast<String>(),
+      special: (json["special"] ?? []).cast<String>(),
+      statistics: (json["statistics"] ?? []).cast<String>(),
+      context: (json["context"] ?? []).cast<String>(),
     );
   }
 
