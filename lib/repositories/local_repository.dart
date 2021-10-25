@@ -1,6 +1,6 @@
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/score.dart';
-import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/flashcard.dart';
 import 'package:flashcards/models/stats.dart';
 import 'package:flashcards/models/sync_data.dart';
 import 'package:flashcards/services/database.dart';
@@ -18,15 +18,15 @@ class LocalRepository {
   }
 
   Future<int> submitScoreWithProgress(Score score) async {
-    for (var cart in score.cards) {
+    for (var flashcard in score.flashcards) {
       await _db.addProgress(
-        cart.id,
+        flashcard.id,
         Progress(
-          cart.id,
+          flashcard.id,
           updated: score.startTime, // the same as the serve
-          ease: cart.progress.ease,
-          interval: cart.progress.interval,
-          repetitions: cart.progress.repetitions,
+          ease: flashcard.progress.ease,
+          interval: flashcard.progress.interval,
+          repetitions: flashcard.progress.repetitions,
         ),
       );
     }
@@ -35,8 +35,8 @@ class LocalRepository {
     return _db.addStats(stats);
   }
 
-  Future<List<Cart>> getCardsByIds(List<String> ids) async {
-    return _db.getCards(ids);
+  Future<List<Flashcard>> getFlashcardsByIds(List<String> ids) async {
+    return _db.getFlashcards(ids);
   }
 
   Future<List<Progress>> getProgress() async {
@@ -48,8 +48,8 @@ class LocalRepository {
   }
 
   Future<void> dispatchUpdates(SyncData updates) async {
-    for (var cart in updates.cards) {
-      await _db.addCard(cart.id, cart);
+    for (var flashcard in updates.flashcards) {
+      await _db.addCard(flashcard.id, flashcard);
     }
 
     for (var progress in updates.progress) {

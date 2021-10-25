@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
-part 'cart.g.dart';
+part 'flashcard.g.dart';
 
 @HiveType(typeId: 1)
-class Cart {
+class Flashcard {
   @HiveField(0)
   final String id;
 
@@ -19,7 +19,7 @@ class Cart {
   @HiveField(4)
   final DateTime updated;
 
-  Cart({
+  Flashcard({
     required this.id,
     required this.updated,
     required this.term,
@@ -27,8 +27,8 @@ class Cart {
     required this.tags,
   });
 
-  factory Cart.fromJson(Map json) {
-    return Cart(
+  factory Flashcard.fromJson(Map json) {
+    return Flashcard(
       id: json["id"],
       updated: DateTime.parse(json["updated"]),
       definition: json["definition"],

@@ -1,16 +1,16 @@
-import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/flashcard.dart';
 import 'package:flashcards/models/memorization.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/stats.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class _Tables {
-  final Box<Cart> cards;
+  final Box<Flashcard> flashcard;
   final Box<Progress> progress;
   final Box<Stats> stats;
 
   _Tables({
-    required this.cards,
+    required this.flashcard,
     required this.progress,
     required this.stats,
   });
@@ -23,13 +23,13 @@ class Database {
   static Future<void> init() async {
     await Hive.initFlutter();
 
-    Hive.registerAdapter(CartAdapter());
+    Hive.registerAdapter(FlashcardAdapter());
     Hive.registerAdapter(ProgressAdapter());
     Hive.registerAdapter(StatsAdapter());
     Hive.registerAdapter(MemorizationStateAdapter());
 
     _tables = _Tables(
-      cards: await Hive.openBox("cards"),
+      flashcard: await Hive.openBox("cards"),
       progress: await Hive.openBox("progress"),
       stats: await Hive.openBox("stats"),
     );
@@ -86,11 +86,11 @@ class Database {
   }
 
   // card
-  List<Cart> getCards([List<String> keys = const []]) {
+  List<Flashcard> getFlashcards([List<String> keys = const []]) {
     if (keys.isEmpty) {
-      return _tables.cards.values.toList();
+      return _tables.flashcard.values.toList();
     } else {
-      final items = keys.map((key) => _tables.cards.get(key)).toList();
+      final items = keys.map((key) => _tables.flashcard.get(key)).toList();
       items.removeWhere((element) => element == null);
       return items.map((e) => e!).toList();
     }
@@ -100,12 +100,12 @@ class Database {
     _tables.stats.delete(key);
   }
 
-  setCard(String key, Cart cart) {
-    return addCard(key, cart);
+  setCard(String key, Flashcard flashcard) {
+    return addCard(key, flashcard);
   }
 
-  addCard(String key, Cart cart) {
-    _tables.cards.put(key, cart);
+  addCard(String key, Flashcard flashcard) {
+    _tables.flashcard.put(key, flashcard);
   }
 
   dispose() {

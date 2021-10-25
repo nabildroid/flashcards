@@ -1,7 +1,7 @@
 import 'cached_sync_ids.dart';
 
 class CachedSyncDates {
-  final DateTime? cards;
+  final DateTime? flashcards;
   final DateTime? progress;
   final DateTime? special;
   final DateTime? statistics;
@@ -10,7 +10,7 @@ class CachedSyncDates {
   final CachedSyncIds localUpdatedIds;
 
   CachedSyncDates({
-    this.cards,
+    this.flashcards,
     this.progress,
     this.special,
     this.statistics,
@@ -21,7 +21,7 @@ class CachedSyncDates {
 
   toJson() {
     return {
-      "cards": cards?.toIso8601String(),
+      "cards": flashcards?.toIso8601String(),
       "progress": progress?.toIso8601String(),
       "special": special?.toIso8601String(),
       "statistics": statistics?.toIso8601String(),
@@ -34,7 +34,7 @@ class CachedSyncDates {
   toFullJson() {
     // todo refactor this
     return {
-      "cards": cards?.toIso8601String(),
+      "cards": flashcards?.toIso8601String(),
       "progress": progress?.toIso8601String(),
       "special": special?.toIso8601String(),
       "statistics": statistics?.toIso8601String(),
@@ -46,7 +46,7 @@ class CachedSyncDates {
 
   CachedSyncDates merge(CachedSyncDates newCach) {
     return CachedSyncDates(
-      cards: newCach.cards ?? cards,
+      flashcards: newCach.flashcards ?? flashcards,
       context: newCach.context ?? context,
       progress: newCach.progress ?? progress,
       deleted: newCach.deleted ?? deleted,
@@ -58,7 +58,7 @@ class CachedSyncDates {
 
   factory CachedSyncDates.fromJson(Map json) {
     return CachedSyncDates(
-      cards: json["cards"] != null ? DateTime.parse(json["cards"]) : null,
+      flashcards: json["cards"] != null ? DateTime.parse(json["cards"]) : null,
       deleted: json["deleted"] != null ? DateTime.parse(json["deleted"]) : null,
       context: json["context"] != null ? DateTime.parse(json["context"]) : null,
       progress:

@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cart.dart';
+part of 'flashcard.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CartAdapter extends TypeAdapter<Cart> {
+class FlashcardAdapter extends TypeAdapter<Flashcard> {
   @override
   final int typeId = 1;
 
   @override
-  Cart read(BinaryReader reader) {
+  Flashcard read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Cart(
+    return Flashcard(
       id: fields[0] as String,
       updated: fields[4] as DateTime,
       term: fields[1] as String,
@@ -26,7 +26,7 @@ class CartAdapter extends TypeAdapter<Cart> {
   }
 
   @override
-  void write(BinaryWriter writer, Cart obj) {
+  void write(BinaryWriter writer, Flashcard obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -47,7 +47,7 @@ class CartAdapter extends TypeAdapter<Cart> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CartAdapter &&
+      other is FlashcardAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

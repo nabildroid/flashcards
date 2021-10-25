@@ -1,10 +1,10 @@
 import 'package:flashcards/models/cached_sync_dates.dart';
-import 'package:flashcards/models/cart.dart';
+import 'package:flashcards/models/flashcard.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/stats.dart';
 
 class SyncData {
-  final List<Cart> cards;
+  final List<Flashcard> flashcards;
   final List<Progress> progress;
   final DateTime? special;
   final List<Stats> statistics;
@@ -12,7 +12,7 @@ class SyncData {
   final DateTime? deleted;
 
   SyncData({
-    required this.cards,
+    required this.flashcards,
     required this.progress,
     required this.statistics,
     this.special,
@@ -22,8 +22,8 @@ class SyncData {
 
   factory SyncData.fromJson(Map json) {
     return SyncData(
-      cards: (json["cards"] as List<dynamic>)
-          .map((j) => Cart.fromJson(j))
+      flashcards: (json["cards"] as List<dynamic>)
+          .map((j) => Flashcard.fromJson(j))
           .toList(),
       progress: (json["progress"] as List<dynamic>)
           .map((j) => Progress.fromJson(j))
@@ -36,9 +36,9 @@ class SyncData {
 
   CachedSyncDates dates() {
     return CachedSyncDates(
-      cards: cards.isEmpty
+      flashcards: flashcards.isEmpty
           ? null
-          : cards.fold(DateTime(199), (p, element) {
+          : flashcards.fold(DateTime(199), (p, element) {
               return p!.compareTo(element.updated) > 0 ? p : element.updated;
             }),
       progress: progress.isEmpty

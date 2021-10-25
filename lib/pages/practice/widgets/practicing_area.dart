@@ -58,9 +58,9 @@ class PracticingArea extends StatelessWidget {
                 (item) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18),
                   child: FlashcardContainer(
-                    head: item.cart.term,
-                    tail: item.cart.definition,
-                    favorit: false, //item.cart.boosted,
+                    head: item.flashcard.term,
+                    tail: item.flashcard.definition,
+                    favorit: false, //item.flashcard.boosted,
                     togglefavorit: context.read<PracticeCubit>().toggleBoosted,
                   ),
                 ),

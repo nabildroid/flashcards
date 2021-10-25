@@ -2,12 +2,12 @@ import 'memorization.dart';
 import 'stats.dart';
 
 class Score {
-  final List<CardMemorization> cards;
+  final List<FlashcardMemorization> flashcards;
   final DateTime startTime;
   final DateTime endTime;
 
   Score({
-    required this.cards,
+    required this.flashcards,
     required this.startTime,
     required this.endTime,
   });
@@ -15,9 +15,9 @@ class Score {
   Stats stats() {
     final stats = Stats(startTime, {});
 
-    for (var card in cards) {
-      stats.states.putIfAbsent(card.state, () => 0);
-      stats.states.update(card.state, (v) => v + 1);
+    for (var flashcard in flashcards) {
+      stats.states.putIfAbsent(flashcard.state, () => 0);
+      stats.states.update(flashcard.state, (v) => v + 1);
     }
 
     return stats;
@@ -25,7 +25,7 @@ class Score {
 
   Map toJson() {
     return {
-      "cards": cards
+      "cards": flashcards
           .map((e) => ({
                 "id": e.id,
                 "time": e.time.toIso8601String(),

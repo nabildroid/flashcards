@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/scheduler.dart';
 import 'package:flashcards/core/utils.dart';
 import 'package:flashcards/models/memorization.dart';
-import 'package:flashcards/models/practice_cart.dart';
+import 'package:flashcards/models/practice_flashcard.dart';
 import 'package:flashcards/models/progress.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/repositories/repository_factory.dart';
@@ -24,8 +24,8 @@ enum PracticeMode {
 }
 
 class PracticeState extends Equatable {
-  final List<PracticeCart> toPractice;
-  final List<CardMemorization> reviewed;
+  final List<PracticeFlashcard> toPractice;
+  final List<FlashcardMemorization> reviewed;
 
   final DateTime startTime;
   final int index;
@@ -52,8 +52,8 @@ class PracticeState extends Equatable {
       );
 
   copyWith({
-    List<CardMemorization>? reviewed,
-    List<PracticeCart>? toPractice,
+    List<FlashcardMemorization>? reviewed,
+    List<PracticeFlashcard>? toPractice,
     PracticeStatus? status,
     String? learningTime,
   }) {
@@ -79,8 +79,8 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   void addFeedback(MemorizationState feedback) async {
     final practice = state.toPractice[state.index];
-    final memorized = CardMemorization(
-      id: practice.cart.id,
+    final memorized = FlashcardMemorization(
+      id: practice.flashcard.id,
       state: feedback,
       time: DateTime.now(),
       progress: _scheduler.sm2(feedback: feedback, prev: practice.progress),
@@ -108,7 +108,7 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   Score getScore() {
     return Score(
-      cards: state.reviewed,
+      flashcards: state.reviewed,
       startTime: state.startTime,
       endTime: DateTime.now(),
     );
@@ -128,7 +128,7 @@ class PracticeCubit extends Cubit<PracticeState> {
     _startTimer();
   }
 
-  Future<List<PracticeCart>> _fetchPracticeCards(
+  Future<List<PracticeFlashcard>> _fetchPracticeCards(
     int limit,
     PracticeMode mode,
   ) async {
@@ -140,13 +140,13 @@ class PracticeCubit extends Cubit<PracticeState> {
       chosen = await _scheduler.selected(limit);
     }
 
-    final cartIds = chosen.map((progress) => progress.id).toList();
-    final carts = await _repository.getCardsByIds(cartIds);
+    final flashcardIds = chosen.map((progress) => progress.id).toList();
+    final flashcards = await _repository.getFlashcardByIds(flashcardIds);
 
-    final practiceCards = carts
-        .map((cart) => PracticeCart(
-              cart,
-              chosen.firstWhere((e) => e.id == cart.id),
+    final practiceCards = flashcards
+        .map((flashcard) => PracticeFlashcard(
+              flashcard,
+              chosen.firstWhere((e) => e.id == flashcard.id),
             ))
         .toList();
 

@@ -23,10 +23,10 @@ class Memorization {
   });
 }
 
-class CardMemorization extends Memorization {
+class FlashcardMemorization extends Memorization {
   final String id;
   final ProgressEntity progress;
-  CardMemorization({
+  FlashcardMemorization({
     required this.id,
     required this.progress,
     required MemorizationState state,

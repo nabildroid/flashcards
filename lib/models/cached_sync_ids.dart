@@ -1,14 +1,14 @@
 import 'package:flashcards/core/utils.dart';
 
 class CachedSyncIds {
-  final List<String>? cards;
+  final List<String>? flashcards;
   final List<String>? progress;
   final List<String>? special;
   final List<String>? statistics;
   final List<String>? context;
 
   const CachedSyncIds({
-    this.cards,
+    this.flashcards,
     this.progress,
     this.special,
     this.statistics,
@@ -17,7 +17,7 @@ class CachedSyncIds {
 
   factory CachedSyncIds.fromJson(Map json) {
     return CachedSyncIds(
-      cards: json["cards"].cast<String>(),
+      flashcards: json["cards"].cast<String>(),
       progress: json["progress"].cast<String>(),
       special: json["special"].cast<String>(),
       statistics: json["statistics"].cast<String>(),
@@ -27,7 +27,7 @@ class CachedSyncIds {
 
   merge(CachedSyncIds merge) {
     return CachedSyncIds(
-      cards: mergeUniquely(cards ?? [], merge.cards ?? []),
+      flashcards: mergeUniquely(flashcards ?? [], merge.flashcards ?? []),
       progress: mergeUniquely(progress ?? [], merge.progress ?? []),
       special: mergeUniquely(special ?? [], merge.special ?? []),
       statistics: mergeUniquely(statistics ?? [], merge.statistics ?? []),
@@ -37,7 +37,7 @@ class CachedSyncIds {
 
   toJson() {
     return {
-      "cards": cards,
+      "cards": flashcards,
       "progress": progress,
       "special": special,
       "statistics": statistics,
@@ -47,7 +47,7 @@ class CachedSyncIds {
 
   bool get isEmpty {
     return [
-      ...cards ?? [],
+      ...flashcards ?? [],
       ...progress ?? [],
       ...special ?? [],
       ...statistics ?? [],
