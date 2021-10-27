@@ -14,7 +14,7 @@ class RemoteRepository {
       defaultValue: 'https://supernabil.herokuapp.com');
 
   Future<void> submitScore(Score score) async {
-    final body = {"score": score};
+    final body = score.toJson();
     final data = jsonEncode(body);
     await Http.post(
       Uri.parse(endpoint + "/flashcards"),

@@ -169,12 +169,10 @@ List<Stats> getLastStatsDays(List<Stats> stats, int n) {
   );
 
   return lastNDays.map((day) {
-    try {
-      return stats
-          .firstWhere((element) => dateInDays(element.date) == dateInDays(day));
-    } catch (e) {
-      return Stats(day, {});
-    }
+    return stats.firstWhere(
+      (element) => dateInDays(element.date) == dateInDays(day),
+      orElse: () => Stats(day, {}),
+    );
   }).toList();
 }
 

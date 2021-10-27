@@ -45,7 +45,7 @@ class SyncCubit extends Cubit<SyncState> {
       local: cachedUpdate,
     );
 
-    await _provider.dispatchUpdatesToLocal(updates.server);
+    await _provider.dispatchUpdatesToLocal(updates.local);
     final isSynced = await _provider.dispatchUpdatesToServer(updates.server);
 
     save(dates.merge(
@@ -123,8 +123,8 @@ class SyncCubit extends Cubit<SyncState> {
 
     // server first
     return _DistributedUpdates(
-      local: nServer,
-      server: nLocal,
+      local: nLocal,
+      server: nServer,
     );
   }
 

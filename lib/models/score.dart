@@ -38,7 +38,7 @@ class Score {
               }))
           .toList(),
       "startTime": startTime.toIso8601String(),
-      "startEnd": endTime.toIso8601String(),
+      "endTime": endTime.toIso8601String(),
     };
   }
 }

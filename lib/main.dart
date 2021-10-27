@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'app.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await CacheService.init();
   await Database.init();
   await ReposityFactory.init();

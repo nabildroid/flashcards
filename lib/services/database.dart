@@ -52,16 +52,16 @@ class Database {
     }
   }
 
-  deleteProgress(String key) {
-    _tables.progress.delete(key);
+  Future<void> deleteProgress(String key) {
+    return _tables.progress.delete(key);
   }
 
-  setProgress(String key, Progress progress) {
-    addProgress(key, progress);
+  Future<void> setProgress(String key, Progress progress) {
+    return addProgress(key, progress);
   }
 
-  addProgress(String key, Progress progress) {
-    _tables.progress.put(key, progress);
+  Future<void> addProgress(String key, Progress progress) {
+    return _tables.progress.put(key, progress);
   }
 
   // stats
@@ -98,19 +98,19 @@ class Database {
     }
   }
 
-  deleteCard(String key) {
-    _tables.stats.delete(key);
+  Future<void> deleteCard(String key) {
+    return _tables.stats.delete(key);
   }
 
-  setCard(String key, Flashcard flashcard) {
+  Future<void> setCard(String key, Flashcard flashcard) {
     return addCard(key, flashcard);
   }
 
-  addCard(String key, Flashcard flashcard) {
-    _tables.flashcard.put(key, flashcard);
+  Future<void> addCard(String key, Flashcard flashcard) {
+    return _tables.flashcard.put(key, flashcard);
   }
 
-  dispose() {
-    Hive.close();
+  Future<void> dispose() {
+    return Hive.close();
   }
 }
