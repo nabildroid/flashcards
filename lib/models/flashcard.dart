@@ -36,4 +36,14 @@ class Flashcard {
       term: json["term"],
     );
   }
+
+  Map toJson() {
+    return {
+      "id": id,
+      "updated": updated.toIso8601String(),
+      "definition": definition,
+      "tags": tags,
+      "term": term,
+    };
+  }
 }

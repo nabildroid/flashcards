@@ -41,4 +41,11 @@ class Stats {
     });
     return Stats(DateTime.parse(json["updated"]), stats);
   }
+
+  Map toJson() {
+    return {
+      "states": states,
+      "updated": date.toIso8601String(),
+    };
+  }
 }

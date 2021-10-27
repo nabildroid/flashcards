@@ -38,8 +38,24 @@ class Progress extends ProgressEntity {
     );
   }
 
+  Map toJson() {
+    return {
+      "flashcardId": id,
+      "updated": updated.toIso8601String(),
+      "ease": ease,
+      "interval": interval,
+      "repetitions": repetitions,
+    };
+  }
+
   Progress merge(Progress b) {
-    // BUG implement this
-    return b;
+    // todo use better algorithm
+    return Progress(
+      id,
+      updated: updated.compareTo(b.updated) > 0 ? updated : b.updated,
+      ease: (ease + b.ease) / 2,
+      interval: (interval + b.interval) ~/ 2,
+      repetitions: (repetitions + b.repetitions) ~/ 2,
+    );
   }
 }

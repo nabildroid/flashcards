@@ -20,6 +20,10 @@ class SyncData {
     this.deleted,
   });
 
+  bool get isEmpty {
+    return flashcards.isEmpty && progress.isEmpty && statistics.isEmpty;
+  }
+
   factory SyncData.fromJson(Map json) {
     return SyncData(
       flashcards: (json["cards"] as List<dynamic>)
@@ -32,6 +36,14 @@ class SyncData {
           .map((j) => Stats.fromJson(j))
           .toList(),
     );
+  }
+
+  Map toJson() {
+    return {
+      "cards": flashcards.map((f) => f.toJson()).toList(),
+      "progress": progress.map((f) => f.toJson()).toList(),
+      "statistics": statistics.map((f) => f.toJson()).toList(),
+    };
   }
 
   CachedSyncDates dates() {

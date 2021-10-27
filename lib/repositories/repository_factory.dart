@@ -16,18 +16,19 @@ class ReposityFactory {
   final RemoteRepository _remote;
   final LocalRepository _local;
   SyncCubit? _sync;
+  static const forceOffline = false;
 
   ReposityFactory(this._remote, this._local);
 
   static Future<void> init() async {
     await Connectivity().checkConnectivity().then((value) {
-      _isOnline = value != ConnectivityResult.none;
+      _isOnline = value != ConnectivityResult.none && !forceOffline;
     });
 
     // todo listener might work immediatly the first time
     // todo dispose the connection
     Connectivity().onConnectivityChanged.listen((value) {
-      _isOnline = value != ConnectivityResult.none;
+      _isOnline = value != ConnectivityResult.none && !forceOffline;
     });
   }
 
@@ -107,9 +108,8 @@ class ReposityFactory {
   }
 
   Future<bool> dispatchUpdatesToServer(SyncData updates) async {
-    if (_isOnline) {
-      // BUG implement this
-      await _local.dispatchUpdates(updates);
+    if (_isOnline && !updates.isEmpty) {
+      await _remote.dispatchUpdates(updates);
       return true;
     }
     return false;
