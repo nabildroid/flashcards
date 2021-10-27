@@ -25,7 +25,7 @@ class RemoteRepository {
 
   Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
     final host = endpoint.replaceFirst(RegExp("^http.*://"), "");
-    final url = Uri.http(host, "/flashcards", dates.toJson());
+    final url = Uri.https(host, "/flashcards", dates.toJson());
 
     final response = await Http.get(url);
 
