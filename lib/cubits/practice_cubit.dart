@@ -78,6 +78,8 @@ class PracticeCubit extends Cubit<PracticeState> {
   PracticeCubit(this._repository) : super(PracticeState.init());
 
   void addFeedback(MemorizationState feedback) async {
+    if (state.status != PracticeStatus.practicing) return;
+
     final practice = state.toPractice[state.index];
     final memorized = FlashcardMemorization(
       id: practice.flashcard.id,

@@ -36,8 +36,7 @@ class Stats {
     final Map<MemorizationState, int> stats = {};
 
     jsonStats.forEach((key, val) {
-      stats.putIfAbsent(
-          MemorizationState.values[int.parse(key) - 1], () => val);
+      stats.putIfAbsent(MemorizationState.values[int.parse(key)], () => val);
     });
     return Stats(DateTime.parse(json["updated"]), stats);
   }
