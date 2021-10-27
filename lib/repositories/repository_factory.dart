@@ -44,7 +44,6 @@ class ReposityFactory {
     return _local.getFlashcardsByIds(ids);
   }
 
-  // todo i think its been called twice
   Future<void> submitScore(Score score) async {
     final statsId = await _local.submitScoreWithProgress(score);
     var cachedLocalIds = const CachedSyncIds();
@@ -81,12 +80,6 @@ class ReposityFactory {
   }
 
   Future<SyncData> getFromIds(CachedSyncIds ids) async {
-    if (!_isOnline) {
-      // todo should we return all the data anyway,
-      // or return it only when there is connection
-      // because when offline, this data is totaly useless
-      return SyncData(flashcards: [], progress: [], statistics: []);
-    }
     return SyncData(
       flashcards: ids.flashcards != null && ids.flashcards!.isNotEmpty
           ? await _local.getFlashcardsByIds(ids.flashcards!)
