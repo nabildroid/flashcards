@@ -42,8 +42,14 @@ class Stats {
   }
 
   Map toJson() {
+    final jsonStats = {};
+
+    states.forEach((key, value) {
+      jsonStats.putIfAbsent(key.index.toString(), () => value);
+    });
+
     return {
-      "states": states,
+      "states": jsonStats,
       "updated": date.toIso8601String(),
     };
   }

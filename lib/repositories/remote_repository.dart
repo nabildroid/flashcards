@@ -34,10 +34,10 @@ class RemoteRepository {
   }
 
   Future<void> dispatchUpdates(SyncData updates) async {
-    final body = {"updates": updates.toJson()};
+    final body = updates.toJson();
     final data = jsonEncode(body);
     await Http.post(
-      Uri.parse(endpoint + "/flashcardUpdates"),
+      Uri.parse(endpoint + "/syncOfflineFlashcards"),
       headers: {"content-type": "application/json"},
       body: data,
     );
