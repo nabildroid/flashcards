@@ -37,7 +37,7 @@ class Streaks extends StatelessWidget {
                             : Colors.transparent,
                         border: Border.all(
                           width: 3,
-                          color: Colors.black26,
+                          color: Colors.black.withOpacity(.1),
                         ),
                       ),
                       child: Center(
@@ -107,7 +107,7 @@ class StreakCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black12,
+        color: Colors.black.withOpacity(.1),
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.all(12),

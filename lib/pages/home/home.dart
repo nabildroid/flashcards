@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ctx.read<StatisticsCubit>().fetch();
       },
       child: Scaffold(
-        backgroundColor: Colors.white70,
+        backgroundColor: Colors.white.withOpacity(.9),
         appBar: AppBar(
           shadowColor: Colors.black26,
           backgroundColor: Colors.white,

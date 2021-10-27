@@ -33,7 +33,8 @@ class _PracticeState extends State<Practice> {
       body: SizedBox.expand(
         child: Column(
           children: [
-            StatusBar(),
+            SizedBox(height: MediaQuery.of(context).padding.top),
+            const StatusBar(),
             Expanded(
               child: RepaintBoundary(
                 child: Padding(
