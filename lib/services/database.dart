@@ -99,7 +99,7 @@ class Database {
   }
 
   Future<void> deleteCard(String key) {
-    return _tables.stats.delete(key);
+    return _tables.flashcard.delete(key);
   }
 
   Future<void> setCard(String key, Flashcard flashcard) {
