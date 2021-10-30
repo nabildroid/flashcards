@@ -122,6 +122,8 @@ class PracticeCubit extends Cubit<PracticeState> {
 
     final selected = await _fetchPracticeCards(10, mode);
 
+    selected.shuffle();
+
     emit(PracticeState.init().copyWith(
       toPractice: selected,
     ));
@@ -139,27 +141,26 @@ class PracticeCubit extends Cubit<PracticeState> {
 
     List<Progress> chosen = [];
     if (mode == PracticeMode.learning) {
-      chosen = await _scheduler.selected(limit);
+      chosen = await _scheduler.selected();
     }
 
-    final flashcardIds = chosen.map((progress) => progress.id).toList();
-    final flashcards = await _repository.getFlashcardByIds(flashcardIds);
+    final List<PracticeFlashcard> selected = [];
 
-    while (flashcards.length < limit) {
-      prevProgress.shuffle();
-      prevProgress.sublist(0, (flashcards.length - limit).abs());
+    for (var item in chosen) {
+      final query = await _repository.getFlashcardByIds([item.id]);
+      if (query.isNotEmpty) {
+        selected.add(PracticeFlashcard(
+          query[0],
+          item,
+        ));
+      }
 
-      flashcards.addAll(await _repository.getFlashcardByIds(flashcardIds));
+      if (selected.length >= limit) {
+        break;
+      }
     }
 
-    final practiceCards = flashcards
-        .map((flashcard) => PracticeFlashcard(
-              flashcard,
-              chosen.firstWhere((e) => e.id == flashcard.id),
-            ))
-        .toList();
-
-    return practiceCards;
+    return selected;
   }
 
   void _pausePracticingForMoment() async {

@@ -33,15 +33,12 @@ class Scheduler {
     this.progress = progress;
   }
 
-  Future<List<Progress>> selected(int limit) async {
+  Future<List<Progress>> selected() async {
     await Future.value();
     final election = this.election();
     election.sort((a, b) => (a.score - b.score).toInt());
 
-    return election
-        .sublist(0, min(election.length, limit))
-        .map((e) => e.progress)
-        .toList();
+    return election.map((e) => e.progress).toList();
   }
 
   List<Vote> election() {
