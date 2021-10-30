@@ -9,7 +9,7 @@ class SyncData {
   final DateTime? special;
   final List<Stats> statistics;
   final DateTime? context;
-  final DateTime? deleted;
+  final List<String> deleted;
 
   SyncData({
     required this.flashcards,
@@ -17,7 +17,7 @@ class SyncData {
     required this.statistics,
     this.special,
     this.context,
-    this.deleted,
+    required this.deleted,
   });
 
   bool get isEmpty {
@@ -35,6 +35,7 @@ class SyncData {
       statistics: (json["statistics"] as List<dynamic>)
           .map((j) => Stats.fromJson(j))
           .toList(),
+      deleted: json["delete"].cast<String>(),
     );
   }
 

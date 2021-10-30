@@ -59,6 +59,10 @@ class LocalRepository {
     for (var stats in updates.statistics) {
       await _db.addStats(stats);
     }
+
+    for (var delete in updates.deleted) {
+      await _db.deleteCard(delete);
+    }
   }
 
   dispose() {

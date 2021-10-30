@@ -73,7 +73,8 @@ class ReposityFactory {
 
   Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
     if (!_isOnline) {
-      return SyncData(flashcards: [], progress: [], statistics: []);
+      return SyncData(
+          flashcards: [], progress: [], statistics: [], deleted: []);
     }
 
     return _remote.getLatestUpdates(dates);
@@ -93,6 +94,7 @@ class ReposityFactory {
               ids.statistics!.map((id) => int.parse(id)).toList(),
             )
           : [],
+      deleted: [],
     );
   }
 

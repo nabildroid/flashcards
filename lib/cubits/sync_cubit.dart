@@ -85,11 +85,13 @@ class SyncCubit extends Cubit<SyncState> {
         flashcards: flashcards.local,
         progress: progress.local,
         statistics: stats.local,
+        deleted: server.deleted,
       ),
       server: SyncData(
         flashcards: flashcards.server,
         progress: progress.server,
         statistics: stats.server,
+        deleted: [],
       ),
     );
   }
