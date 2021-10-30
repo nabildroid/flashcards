@@ -145,6 +145,13 @@ class PracticeCubit extends Cubit<PracticeState> {
     final flashcardIds = chosen.map((progress) => progress.id).toList();
     final flashcards = await _repository.getFlashcardByIds(flashcardIds);
 
+    while (flashcards.length < limit) {
+      prevProgress.shuffle();
+      prevProgress.sublist(0, (flashcards.length - limit).abs());
+
+      flashcards.addAll(await _repository.getFlashcardByIds(flashcardIds));
+    }
+
     final practiceCards = flashcards
         .map((flashcard) => PracticeFlashcard(
               flashcard,
@@ -166,7 +173,7 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   Duration _pausingTimeBasedOnPrevSession() {
     // BUG pause time should depend on previous card difficulty
-    int s = 5;
+    int s = 0;
     return Duration(seconds: s);
   }
 
