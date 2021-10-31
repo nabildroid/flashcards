@@ -48,15 +48,19 @@ class EaseStats extends StatelessWidget {
               buildWhen: (p, n) => p.daysStats != n.daysStats,
               builder: (context, state) => Chart(
                 colors: [
+                  Color(0xFF00A2C6),
                   Color(0xFF41A430),
                   Color(0xFFEF4848),
-                  Color(0xFF00A2C6),
                 ],
                 xLabels: state.daysStats.reversed
                     .map((e) => monthDayFromDate(e.date))
                     .toList(),
                 data: state.daysStats.reversed
-                    .map((e) => MemorizationState.values.map((s) {
+                    .map((e) => [
+                          MemorizationState.easy,
+                          MemorizationState.good,
+                          MemorizationState.forget,
+                        ].map((s) {
                           if (e.states.containsKey(s)) {
                             return e.states[s]!.toDouble();
                           } else {
