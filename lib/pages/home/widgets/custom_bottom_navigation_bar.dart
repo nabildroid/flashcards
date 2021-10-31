@@ -31,11 +31,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
         children: [
           Button(
             onPressed: () {},
-            icon: Icons.star,
-            label: "Favorit",
-          ),
-          Button(
-            onPressed: () {},
             icon: Icons.shuffle,
             label: "Random",
           ),
