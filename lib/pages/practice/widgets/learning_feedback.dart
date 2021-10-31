@@ -24,19 +24,19 @@ class LearningFeedback extends StatelessWidget {
         children: [
           FeedbackButton(
             colors: [Color(0xFFEF668F), Color(0xFFEF4848)],
-            label: "Hard",
+            label: "forget",
             onPressed: hard,
             enabled: enabled,
           ),
           FeedbackButton(
             colors: [Color(0xFF50A888), Color(0xFF41A430)],
-            label: "Good",
+            label: "almost",
             onPressed: good,
             enabled: enabled,
           ),
           FeedbackButton(
             colors: [Color(0xFF3FCEBD), Color(0xFF00A2C6)],
-            label: "easy",
+            label: "done",
             onPressed: easy,
             enabled: enabled,
           ),
