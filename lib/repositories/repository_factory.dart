@@ -59,8 +59,8 @@ class ReposityFactory {
 
     _sync?.save(
       CachedSyncDates(
-        statistics: score.startTime,
-        progress: score.startTime,
+        statistics: score.endTime,
+        progress: score.endTime,
         localUpdatedIds: cachedLocalIds,
       ),
       merge: true,

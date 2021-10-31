@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/utils.dart';
 import 'package:flashcards/models/score.dart';
@@ -137,7 +139,8 @@ int computeLongestChain(List<DateTime> days) {
     }
     return element;
   });
-  return longestChain;
+
+  return max(longestChain, runningChain);
 }
 
 int computeCurrentChain(List<DateTime> days) {
@@ -153,9 +156,10 @@ int computeCurrentChain(List<DateTime> days) {
           runningChain++;
           prev = days[i];
         } else {
-          return runningChain;
+          break;
         }
       }
+      return runningChain;
     }
   }
 
