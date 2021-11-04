@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flashcards/core/scheduler.dart';
@@ -137,16 +138,26 @@ class PracticeCubit extends Cubit<PracticeState> {
     PracticeMode mode,
   ) async {
     final prevProgress = await _repository.getProgress();
+    prevProgress.shuffle();
+
     _scheduler.init(prevProgress);
 
     List<Progress> chosen = [];
     if (mode == PracticeMode.learning) {
       chosen = await _scheduler.selected();
+    } else if (mode == PracticeMode.random) {
+      chosen = prevProgress;
     }
 
     final List<PracticeFlashcard> selected = [];
-
+    // todo refactore this
+    const randomFlashcards = 0.2;
     for (var item in chosen) {
+      if (Random().nextDouble() <= randomFlashcards) {
+        final randIndex = Random().nextInt(prevProgress.length);
+        item = prevProgress[randIndex];
+      }
+
       final query = await _repository.getFlashcardByIds([item.id]);
       if (query.isNotEmpty) {
         selected.add(PracticeFlashcard(
