@@ -22,6 +22,7 @@ enum PracticeStatus {
 
 enum PracticeMode {
   learning,
+  random,
 }
 
 class PracticeState extends Equatable {
@@ -166,7 +167,7 @@ class PracticeCubit extends Cubit<PracticeState> {
         ));
       }
 
-      if (selected.length >= limit) {
+      if (selected.length >= limit && mode != PracticeMode.random) {
         break;
       }
     }

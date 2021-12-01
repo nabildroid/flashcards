@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'flashcard_container.dart';
 
 class PracticingArea extends StatelessWidget {
+  final bool manual;
   const PracticingArea({
     Key? key,
+    this.manual = false,
     required PageController pageController,
   })  : _pageController = pageController,
         super(key: key);
@@ -52,7 +54,7 @@ class PracticingArea extends StatelessWidget {
         return PageView(
           clipBehavior: Clip.none,
           controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: manual ? null : const NeverScrollableScrollPhysics(),
           children: state.toPractice
               .map(
                 (item) => Padding(

@@ -34,37 +34,49 @@ class _PracticeState extends State<Practice> {
         child: Column(
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top),
-            const StatusBar(),
+            // TODO refactor this!
+            if (widget.mode == PracticeMode.learning) const StatusBar(),
+            if (widget.mode != PracticeMode.learning)
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.exit_to_app),
+              ),
             Expanded(
               child: RepaintBoundary(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   child: Center(
-                    child: PracticingArea(pageController: _pageController),
+                    child: PracticingArea(
+                      pageController: _pageController,
+                      manual: widget.mode != PracticeMode.learning,
+                    ),
                   ),
                 ),
               ),
             ),
-            RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(18).copyWith(
-                  top: 0,
-                ),
-                child: BlocBuilder<PracticeCubit, PracticeState>(
-                    buildWhen: (p, n) => p.status.index != n.status.index,
-                    builder: (context, state) {
-                      final addFeedback =
-                          context.read<PracticeCubit>().addFeedback;
+            if (widget.mode == PracticeMode.learning)
+              RepaintBoundary(
+                child: Padding(
+                  padding: const EdgeInsets.all(18).copyWith(
+                    top: 0,
+                  ),
+                  child: BlocBuilder<PracticeCubit, PracticeState>(
+                      buildWhen: (p, n) => p.status.index != n.status.index,
+                      builder: (context, state) {
+                        final addFeedback =
+                            context.read<PracticeCubit>().addFeedback;
 
-                      return LearningFeedback(
-                        enabled: state.status == PracticeStatus.practicing,
-                        easy: () => addFeedback(MemorizationState.easy),
-                        hard: () => addFeedback(MemorizationState.forget),
-                        good: () => addFeedback(MemorizationState.good),
-                      );
-                    }),
+                        return LearningFeedback(
+                          enabled: state.status == PracticeStatus.practicing,
+                          easy: () => addFeedback(MemorizationState.easy),
+                          hard: () => addFeedback(MemorizationState.forget),
+                          good: () => addFeedback(MemorizationState.good),
+                        );
+                      }),
+                ),
               ),
-            ),
           ],
         ),
       ),

@@ -30,7 +30,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Button(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push<Score>(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => const Practice(PracticeMode.random),
+                ),
+              );
+            },
             icon: Icons.shuffle,
             label: "Random",
           ),
