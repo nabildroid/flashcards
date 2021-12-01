@@ -17,7 +17,7 @@ class RemoteRepository {
     final body = score.toJson();
     final data = jsonEncode(body);
     await Http.post(
-      Uri.parse(endpoint + "/flashcards"),
+      Uri.parse(endpoint + "/flashcard/score"),
       headers: {"content-type": "application/json"},
       body: data,
     );
@@ -25,7 +25,7 @@ class RemoteRepository {
 
   Future<SyncData> getLatestUpdates(CachedSyncDates dates) async {
     final host = endpoint.replaceFirst(RegExp("^http.*://"), "");
-    final url = Uri.https(host, "/flashcards", dates.toJson());
+    final url = Uri.https(host, "/flashcard", dates.toJson());
 
     final response = await Http.get(url);
 
@@ -37,7 +37,7 @@ class RemoteRepository {
     final body = updates.toJson();
     final data = jsonEncode(body);
     await Http.post(
-      Uri.parse(endpoint + "/syncOfflineFlashcards"),
+      Uri.parse(endpoint + "/flashcard/offline"),
       headers: {"content-type": "application/json"},
       body: data,
     );
