@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/models/cached_sync_dates.dart';
@@ -18,6 +20,8 @@ class ReposityFactory {
   SyncCubit? _sync;
   static const forceOffline = false;
 
+  static late StreamSubscription connectivityStream;
+
   ReposityFactory(this._remote, this._local);
 
   static Future<void> init() async {
@@ -26,7 +30,6 @@ class ReposityFactory {
     });
 
     // todo listener might work immediatly the first time
-    // todo dispose the connection
     Connectivity().onConnectivityChanged.listen((value) {
       _isOnline = value != ConnectivityResult.none && !forceOffline;
     });
@@ -112,6 +115,6 @@ class ReposityFactory {
 
   dispose() {
     _local.dispose();
-    // todo dispose the connectivity listener
+    connectivityStream.cancel();
   }
 }
