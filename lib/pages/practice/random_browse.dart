@@ -1,6 +1,7 @@
 import 'package:flashcards/cubits/random_browse_cubit.dart';
 import 'package:flashcards/pages/practice/widgets/flashcard_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RandomBrowse extends StatefulWidget {
@@ -30,32 +31,47 @@ class _RnadomBrowseState extends State<RandomBrowse> {
                 children: [
                   Expanded(
                     flex: 8,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: BlocBuilder<RandomCubit, RandomBrowseState>(
-                          builder: (context, state) {
-                        return Row(
-                          children: state.tags.map((tag) {
-                            final selected =
-                                state.tag != null && state.tag == tag;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: selected
-                                  ? Chip(
-                                      onDeleted:
-                                          context.read<RandomCubit>().clearTag,
-                                      label: Text(tag),
-                                    )
-                                  : ActionChip(
-                                      onPressed: () => context
-                                          .read<RandomCubit>()
-                                          .setTag(tag),
-                                      label: Text(tag),
-                                    ),
-                            );
-                          }).toList(),
-                        );
-                      }),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).canvasColor,
+                            Theme.of(context).canvasColor.withOpacity(.6),
+                            Theme.of(context).canvasColor.withOpacity(0),
+                          ],
+                          begin: Alignment.centerRight,
+                          end: const Alignment(.9, 0),
+                        ),
+                      ),
+                      position: DecorationPosition.foreground,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: BlocBuilder<RandomCubit, RandomBrowseState>(
+                            builder: (context, state) {
+                          return Row(
+                            children: state.tags.map((tag) {
+                              final selected =
+                                  state.tag != null && state.tag == tag;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: selected
+                                    ? Chip(
+                                        onDeleted: context
+                                            .read<RandomCubit>()
+                                            .clearTag,
+                                        label: Text(tag),
+                                      )
+                                    : ActionChip(
+                                        onPressed: () => context
+                                            .read<RandomCubit>()
+                                            .setTag(tag),
+                                        label: Text(tag),
+                                      ),
+                              );
+                            }).toList(),
+                          );
+                        }),
+                      ),
                     ),
                   ),
                   Expanded(
