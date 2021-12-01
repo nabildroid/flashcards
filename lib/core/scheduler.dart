@@ -29,6 +29,7 @@ class Scheduler {
 
   Scheduler();
 
+  // todo doesn't make any sence
   void init(List<Progress> progress) {
     this.progress = progress;
   }

@@ -19,7 +19,7 @@ class CachedSyncDates {
     this.localUpdatedIds = const CachedSyncIds(),
   });
 
-  toJson() {
+  Map<String, dynamic> getDatesAsJson() {
     return {
       "cards": flashcards?.toIso8601String(),
       "progress": progress?.toIso8601String(),
@@ -27,21 +27,17 @@ class CachedSyncDates {
       "statistics": statistics?.toIso8601String(),
       "deleted": deleted?.toIso8601String(),
       "context": context?.toIso8601String(),
-      // "localUpdatedIds": localUpdatedIds.toJson(),
     };
   }
 
-  toFullJson() {
-    // todo refactor this
-    return {
-      "cards": flashcards?.toIso8601String(),
-      "progress": progress?.toIso8601String(),
-      "special": special?.toIso8601String(),
-      "statistics": statistics?.toIso8601String(),
-      "deleted": deleted?.toIso8601String(),
-      "context": context?.toIso8601String(),
-      "localUpdatedIds": localUpdatedIds.toJson(),
-    };
+  Map<String, dynamic> toJson() {
+    final json = getDatesAsJson();
+    json.putIfAbsent(
+      "localUpdatedIds",
+      () => localUpdatedIds.toJson(),
+    );
+
+    return json;
   }
 
   CachedSyncDates merge(CachedSyncDates newCach, {bool resetIds = false}) {

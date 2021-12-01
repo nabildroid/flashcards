@@ -15,7 +15,7 @@ class CacheService {
   }
 
   save(CachedSyncDates dates) async {
-    final toStore = dates.toFullJson();
+    final toStore = dates.toJson();
     await _instance.setString(key, jsonEncode(toStore));
   }
 
