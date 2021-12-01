@@ -20,11 +20,6 @@ enum PracticeStatus {
   init,
 }
 
-enum PracticeMode {
-  learning,
-  random,
-}
-
 class PracticeState extends Equatable {
   final List<PracticeFlashcard> toPractice;
   final List<FlashcardMemorization> reviewed;
@@ -118,11 +113,11 @@ class PracticeCubit extends Cubit<PracticeState> {
     );
   }
 
-  void fetch(PracticeMode mode) async {
+  void fetch() async {
     emit(PracticeState.init());
     emit(state.copyWith(status: PracticeStatus.loading));
 
-    final selected = await _fetchPracticeCards(10, mode);
+    final selected = await _fetchPracticeCards(10);
 
     selected.shuffle();
 
@@ -136,7 +131,6 @@ class PracticeCubit extends Cubit<PracticeState> {
 
   Future<List<PracticeFlashcard>> _fetchPracticeCards(
     int limit,
-    PracticeMode mode,
   ) async {
     final prevProgress = await _repository.getProgress();
     prevProgress.shuffle();
@@ -144,11 +138,7 @@ class PracticeCubit extends Cubit<PracticeState> {
     _scheduler.init(prevProgress);
 
     List<Progress> chosen = [];
-    if (mode == PracticeMode.learning) {
       chosen = await _scheduler.selected();
-    } else if (mode == PracticeMode.random) {
-      chosen = prevProgress;
-    }
 
     final List<PracticeFlashcard> selected = [];
     // todo refactore this
@@ -167,7 +157,7 @@ class PracticeCubit extends Cubit<PracticeState> {
         ));
       }
 
-      if (selected.length >= limit && mode != PracticeMode.random) {
+      if (selected.length >= limit) {
         break;
       }
     }

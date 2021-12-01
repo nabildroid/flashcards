@@ -1,8 +1,7 @@
-import 'package:flashcards/cubits/practice_cubit.dart';
 import 'package:flashcards/cubits/statistics_cubit.dart';
 import 'package:flashcards/models/score.dart';
 import 'package:flashcards/pages/practice/practice.dart';
-import 'package:flashcards/repositories/remote_repository.dart';
+import 'package:flashcards/pages/practice/random_browse.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,7 +33,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               Navigator.push<Score>(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) => const Practice(PracticeMode.random),
+                  builder: (ctx) => const RandomBrowse(),
                 ),
               );
             },
@@ -46,7 +45,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               final score = await Navigator.push<Score>(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) => const Practice(PracticeMode.learning),
+                  builder: (ctx) => const Practice(),
                 ),
               );
 

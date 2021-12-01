@@ -1,4 +1,5 @@
 import 'package:flashcards/cubits/practice_cubit.dart';
+import 'package:flashcards/cubits/random_browse_cubit.dart';
 import 'package:flashcards/cubits/sync_cubit.dart';
 import 'package:flashcards/pages/home/home.dart';
 import 'package:flashcards/repositories/remote_repository.dart';
@@ -36,6 +37,11 @@ class App extends StatelessWidget {
             ),
             BlocProvider(
               create: (ctx) => PracticeCubit(
+                _repo,
+              ),
+            ),
+            BlocProvider(
+              create: (ctx) => RandomCubit(
                 _repo,
               ),
             ),
